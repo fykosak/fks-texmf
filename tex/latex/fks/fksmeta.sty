@@ -80,9 +80,35 @@
 \met@probheader & %
 \Roman{solvedbatch} & \textnormal{\%} & $\Sigma$ \\}
 
+% For switching between FYKOS and Vyfuk functionality across texmf files.
+\newif\iffykos
+\fykosfalse
+\newif\ifvyfuk
+\vyfukfalse
+% language selector
+\newif\iffksczech
+\fksczechfalse
+\newif\iffksslovak
+\fksslovakfalse
+\newif\iffksenglish
+\fksenglishfalse
+\newif\iffkslang
+\fkslangfalse
+
+% set default language czech
+\DeclareOption{czech}{\fksczechtrue\fkslangtrue}
+\DeclareOption{slovak}{\fksslovaktrue\fkslangtrue}
+\DeclareOption{english}{\fksenglishtrue\fkslangtrue}
+\ProcessOptions\relax
+\iffkslang\else%
+\fksczechtrue%
+\PackageWarning{fksmeta}{No language passed czech selected.}
+\fi
+
 
 % FYKOS
 \DeclareOption{fykos}{%
+  \fykostrue
   \renewcommand\met@headername{Fyzikální korespondenční seminář MFF UK}
   \renewcommand\met@shortname{FYKOS}
   \renewcommand\met@volumeid{ročník \metayear{year}\qquad číslo \arabic{batch}/7}
@@ -125,7 +151,6 @@
 \met@ownauthorspage
 \bigskip
 }
-
 \renewcommand\met@probthemeauthors{
 \textit{Náměty úloh:}\par
 \hspace{\tmpp@rindent}
@@ -134,8 +159,29 @@
 \end{minipage}\par
 }
 
+% to have initialized counters
+\AtBeginDocument{
+\hypersetup{
+    pdftitle=\ifyearbook{Ročenka FYKOSu, \Roman{year}. ročník}\else{FYKOS, \Roman{year}. ročník, \arabic{batch}. číslo}\fi,    % title
+    pdfauthor={Organizátoři FYKOSu <fykos@fykos.cz>},     % author
+    pdfsubject={Fyzikální korespondenční seminář MFF UK},   % subject of the document
+}}
 
-  \renewcommand\met@address{%
+\iffksczech
+\renewcommand\met@licence{%
+Fyzikální korespondenční seminář je organizován studenty MFF~UK.
+Je zastřešen Oddělením pro vnější vztahy a~propagaci MFF~UK
+a~podporován Ústavem teoretické fyziky\\
+MFF~UK, jeho zaměstnanci a~Jednotou českých matematiků a~fyziků.
+\nopagebreak\medskip
+
+\footnotesize Toto dílo je šířeno pod licencí Creative Commons
+Attribution-Share Alike 3.0 Unported.\\
+Pro zobrazení kopie této licence navštivte
+\url{http://creativecommons.org/licenses/by-sa/3.0/}.\par
+}
+
+\renewcommand\met@address{%
 \begin{tabular}{r>{\slshape\bfseries}l}
   \multirow{5}{*}{\includegraphics{logo5.eps}} & \FYKOS \\
   & UK, Matematicko-fyzikální fakulta\\
@@ -155,30 +201,48 @@
 
 \href{http://www.facebook.com/Fykos}{\bfseries\slshape http://www.facebook.com/Fykos}}\fi
 }
-\renewcommand\met@licence{
-Fyzikální korespondenční seminář je organizován studenty MFF~UK.
-Je zastřešen Oddělením pro vnější vztahy a~propagaci MFF~UK
-a~podporován Ústavem teoretické fyziky\\
-MFF~UK, jeho zaměstnanci a~Jednotou českých matematiků a~fyziků.
+\fi%iffksczech
+\iffksenglish
+\renewcommand\met@licence{%
+FYKOS is organized by students of Faculty of Mathematics and Physics of Charles University.
+It's part of Public Relations Office activities and is supported by Institute of Theoretical Physics, MFF UK,
+his employees and The Union of Czech Mathematicians and Physicists.
 \nopagebreak\medskip
 
-\footnotesize Toto dílo je šířeno pod licencí Creative Commons
+\footnotesize This work is licensed under Creative Commons
 Attribution-Share Alike 3.0 Unported.\\
-Pro zobrazení kopie této licence navštivte
+To view a copy of the license, visit
 \url{http://creativecommons.org/licenses/by-sa/3.0/}.\par
 }
 
-% to have initialized counters
-\AtBeginDocument{
-\hypersetup{
-    pdftitle=\ifyearbook{Ročenka FYKOSu, \Roman{year}. ročník}\else{FYKOS, \Roman{year}. ročník, \arabic{batch}. číslo}\fi,    % title
-    pdfauthor={Organizátoři FYKOSu <fykos@fykos.cz>},     % author
-    pdfsubject={Fyzikální korespondenční seminář MFF UK},   % subject of the document
-}}} % end FYKOS
+\renewcommand\met@address{%
+\begin{tabular}{r>{\slshape\bfseries}l}
+      \multirow{5}{*}{\includegraphics{logo5.eps}} & \FYKOS \\
+      & Institute of Theoretical Physics\\
+      & Faculty of Mathematics and Physics, Charles University\\
+      & V Holešovičkách 2\\
+      & 180\,00 Praha 8\\
+      & Czech Republic\\
+    \noalign{\smallskip}
+      www: & \normalfont\url{http://fykos.org}\\
+      e-mail: & \normalfont\mail{fykos@fykos.cz}\\
+\end{tabular}
+\nopagebreak\smallskip
+
+{\sffamily\FYKOS{} is also on Facebook \raisebox{-0.2\baselineskip}{%
+        \opt{web}{\includegraphics[height=\baselineskip]{color/fb_logo.eps}}%
+        \opt{print}{\includegraphics[height=\baselineskip]{fb_logo.eps}}%
+    }\nopagebreak
+
+\href{http://www.facebook.com/Fykos}{\bfseries\slshape http://www.facebook.com/Fykos}}
+}
+\fi%iffksenglish
+}% end FYKOS
 
 
 % --- VÝFUK ---
 \DeclareOption{vyfuk}{%
+  \vyfuktrue
   \newcommand\year@tag[1]{\ifcase #1 \or 1\or 2\or 3\or 4\or 5\or \ding{187}\or \ding{188}\or \ding{189}\or \ding{190}\else \@ctrerr\fi{} }
 \newcommand\type@tag[1]{%
 \ifthenelse{\equal{#1}{hard}}{\ding{72}}{}%

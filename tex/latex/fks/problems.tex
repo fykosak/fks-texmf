@@ -40,7 +40,7 @@
   \tasktrue\solutionfalse\solutionsinglefalse%
   \stepcounter{problem}%
   \@LoadProblem{\thebatch}{\theproblem}{%
-   \problem[\metaprobletter{problem}: \@probname]{Úloha \problemnum{batch}{problem} \,\ldots{} \@probname{} \metaprobdata{problem} \hfill {\normalfont\normalsize\problempoints}}%
+      \problem[\metaprobletter{problem}: \@probname]{\lngopt{cs}{Úloha}\lngopt{en}{Problem} \problemnum{batch}{problem} \,\ldots{} \@probname{} \metaprobdata{problem} \hfill {\normalfont\normalsize\problempoints}}%
    \nopagebreak\ifthenelse{\equal{\@probfig}{N/A}}{}{\@probfig}\nopagebreak%
    \@probtask%
   }
@@ -73,9 +73,10 @@
   \pr@blemsolution
 }
 
+
 \newcommand\pr@blemsolution{%
    \problem[\metaprobletter{problem}: \@probname]%
-    {Úloha \problemnum{solvedbatch}{problem} \,\ldots{} \@probname{} \hfill
+   {\lngopt{cs}{Úloha}\lngopt{en}{Problem} \problemnum{solvedbatch}{problem} \,\ldots{} \@probname{} \hfill
       {\normalfont\normalsize\problemstats}}%
    \nopagebreak\ifthenelse{\equal{\@probfig}{N/A}}{}{\@probfig}\nopagebreak%
    \textsl{\@probtask}
@@ -95,7 +96,10 @@
 průměr~\@probavg;
 \plural{\@probsolvers}{řešil}{řešili}{řešilo}{}~\@probsolvers{}~\plural{\@probsolvers}{student}{studenti}{studentů}}}
 
-\newcommand\problempoints{\@probpoints~\plural{\@probpoints}{bod}{body}{bodů}}
+\newcommand\problempoints{\@probpoints~%
+  \lngopt{cs}{\plural{\@probpoints}{bod}{body}{bodů}}%
+  \lngopt{en}{\plural{\@probpoints}{point}{points}{points}}%
+}
 
 % ifs for customizing problems layout
 \newif\iftask

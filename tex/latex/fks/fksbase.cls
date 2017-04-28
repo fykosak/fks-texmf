@@ -133,7 +133,7 @@
 }
 
 \AtBeginDocument{%
-  \renewcommand\figurename{Obr.}
+  \renewcommand\figurename{\lngopt{cs}{Obr.}\lngopt{en}{Fig.}}
   \renewcommand\tablename{Tab.}
 }
 
