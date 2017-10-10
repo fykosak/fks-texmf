@@ -1,0 +1,44 @@
+addons:
+  apt:
+    packages:
+      - fonts-sil-doulos
+      - lmodern
+      - pgf
+      - texlive-base
+      - texlive-science
+      - texlive-fonts-extra
+      - texlive-fonts-recommended
+      - texlive-font-utils
+      - texlive-lang-greek
+      - texlive-lang-czechslovak
+      - texlive-latex-base
+      - texlive-latex-extra
+      - texlive-latex-recommended
+      - texlive-math-extra
+      - texlive-xetex 
+# for tests
+      - latex-beamer
+      - python-matplotlib
+      - python-numpy
+
+
+before_install:
+      # - sudo sed 's/deb /deb [trusted=yes] /' -i /etc/apt/sources.list /etc/apt/sources.list.d/*
+  # we need poppler-utils >= 0.25
+  - sudo add-apt-repository -y ppa:alexis-via/poppler-utils-backport
+  - sudo apt-get update -qy --allow-unauthenticated || true
+  - sudo apt-get install --allow-unauthenticated -y poppler-utils
+
+install:
+
+before_script:
+
+script:
+  - make test
+
+after_failure:
+  - cat ./tests/out/*.log
+  - echo "MARK"
+  - tar cj ./tests/out/*-diff.png | base64
+  - echo "MARK"
+  - echo "Test failed, `cat MARK/MARK | base64 -d | tar xj` to see respective diff PNGs"

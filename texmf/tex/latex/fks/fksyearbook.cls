@@ -26,6 +26,7 @@
 %ellipsis
 
 \RequirePackage[version=3]{mhchem}
+\RequirePackage{listings}
 
 \RequirePackage[xetex,
   setpagesize=false,
@@ -43,11 +44,11 @@
 \RequirePackage{fkslang}
 
 \newfontfamily\cyrillicfont[Ligatures=TeX, % recommended
-ItalicFont=[cmunti.ttf],
-BoldFont=[cmunbx.ttf],
-BoldItalicFont=[cmunbi.ttf],
-SlantedFont=[cmunsl.ttf]
-]{[cmunrm.ttf]}
+ItalicFont=[cmunti.otf],
+BoldFont=[cmunbx.otf],
+BoldItalicFont=[cmunbi.otf],
+SlantedFont=[cmunsl.otf]
+]{[cmunrm.otf]}
 
 \widowpenalty 1000 \clubpenalty 1000 \displaywidowpenalty 1000
 
@@ -265,7 +266,7 @@ A{\bfseries}r}} % sum
 \newcommand\seriesheading[1]{%TODO mozna subsection
 %\addcontentsline{toc}{section}{Kapitola \arabic{serieschapter}: {#1}}
 \addtocontents{toc}{\protect\setcounter{tocdepth}{1}} % povolit section v TOC
-\section[Kapitola \arabic{serieschapter}: #1]{\met@headeryearserieschapter{#1}}
+\section[\met@headeryearserieschaptername: #1]{\met@headeryearserieschapter{#1}}
 \addtocontents{toc}{\protect\setcounter{tocdepth}{0}} % zakazat section v TOC
 }
 
@@ -484,8 +485,8 @@ Vytiskl \@tiskarna
 \bigskip
 
 Publikace neprošla recenzním ani lektorským řízením\\
-Vydáno pro interní potřebu MFF UK\\
 Nakladatelství neodpovídá za kvalitu a obsah textu\\
+Vydáno pro interní potřebu MFF UK\\
 Neprodejná publikace
 \bigskip
 

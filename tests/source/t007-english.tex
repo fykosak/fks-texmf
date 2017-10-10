@@ -1,0 +1,18 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper]{geometry}
+\usepackage{fontspec}
+\usepackage{xltxtra}
+\usepackage[czech]{babel}
+\usepackage[english]{fkssugar}
+
+\begin{document}
+\uv{ahoj} $"12.3 m"$
+
+\makeatletter\fkssug@rczech\makeatother
+
+\uv{ahoj} $"12.3 m"$
+
+\makeatletter\fkssug@renglish\makeatother
+
+\uv{ahoj} $"12.3 m"$
+\end{document}

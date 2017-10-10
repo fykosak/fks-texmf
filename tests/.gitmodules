@@ -1,0 +1,6 @@
+[submodule "components/texmf.base"]
+	path = components/texmf.base
+	url = git@github.com:fykosak/fks-texmf.git
+[submodule "components/texmf.fonts"]
+	path = components/texmf.fonts
+	url = git@fykos.cz:texmf.fonts.git

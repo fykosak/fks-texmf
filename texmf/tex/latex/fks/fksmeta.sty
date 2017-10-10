@@ -41,7 +41,8 @@
 \newcommand\met@headeryearexpproblems{Zadání experimentálních úloh}
 \newcommand\met@headeryearexpsolutions{Řešení experimentálních úloh}
 \newcommand\met@headeryearseries[1]{Seriál o #1}
-\newcommand\met@headeryearserieschapter[1]{Kapitola \arabic{serieschapter}: #1}
+\newcommand\met@headeryearserieschaptername{Kapitola \arabic{serieschapter}}
+\newcommand\met@headeryearserieschapter[1]{\met@headeryearserieschaptername: #1}
 \newcommand\met@headeryearseriessolutionsbasic{Řešení úloh ze seriálu}%bez obrazku pro bookmark
 \newcommand\met@headeryearseriessolutions{\met@headeryearseriessolutionsbasic}
 \newcommand\met@headeryearresults{Pořadí nejlepších řešitelů}
@@ -80,9 +81,35 @@
 \met@probheader & %
 \Roman{solvedbatch} & \textnormal{\%} & $\Sigma$ \\}
 
+% For switching between FYKOS and Vyfuk functionality across texmf files.
+\newif\iffykos
+\fykosfalse
+\newif\ifvyfuk
+\vyfukfalse
+% language selector
+\newif\iffksczech
+\fksczechfalse
+\newif\iffksslovak
+\fksslovakfalse
+\newif\iffksenglish
+\fksenglishfalse
+\newif\iffkslang
+\fkslangfalse
+
+% set default language czech
+\DeclareOption{czech}{\fksczechtrue\fkslangtrue}
+\DeclareOption{slovak}{\fksslovaktrue\fkslangtrue}
+\DeclareOption{english}{\fksenglishtrue\fkslangtrue}
+\ProcessOptions\relax
+\iffkslang\else%
+\fksczechtrue%
+\PackageWarning{fksmeta}{No language passed czech selected.}
+\fi
+
 
 % FYKOS
 \DeclareOption{fykos}{%
+  \fykostrue
   \renewcommand\met@headername{Fyzikální korespondenční seminář MFF UK}
   \renewcommand\met@shortname{FYKOS}
   \renewcommand\met@volumeid{ročník \metayear{year}\qquad číslo \arabic{batch}/7}
@@ -98,7 +125,7 @@
 \renewcommand\met@headeryearexpproblems{\centering \includegraphics{logo1.eps}\hspace{10pt}\raisebox{0.6cm}{Zadání experimentálních úloh}}
 \renewcommand\met@headeryearexpsolutions{\centering \includegraphics{logo4.eps}\hspace{10pt}\raisebox{0.6cm}{Řešení experimentálních úloh}}
 \renewcommand\met@headeryearseries[1]{\centering \includegraphics{logo3.eps}\hspace{10pt}\raisebox{0.6cm}{#1}}
-\renewcommand\met@headeryearserieschapter[1]{Kapitola \arabic{serieschapter}: #1}
+\renewcommand\met@headeryearserieschapter[1]{\met@headeryearserieschaptername: #1}
 \renewcommand\met@headeryearseriessolutionsbasic{Řešení úloh ze seriálu}%bez obrazku pro bookmark
 \renewcommand\met@headeryearseriessolutions{\centering \includegraphics{logo3.eps}\hspace{10pt}\raisebox{0.6cm}{\met@headeryearseriessolutionsbasic}}
 \renewcommand\met@headeryearresults{\centering \includegraphics{logo7.eps}\hspace{10pt}\raisebox{0.6cm}{Pořadí nejlepších řešitelů}}
@@ -125,7 +152,6 @@
 \met@ownauthorspage
 \bigskip
 }
-
 \renewcommand\met@probthemeauthors{
 \textit{Náměty úloh:}\par
 \hspace{\tmpp@rindent}
@@ -134,8 +160,29 @@
 \end{minipage}\par
 }
 
+% to have initialized counters
+\AtBeginDocument{
+\hypersetup{
+    pdftitle=\ifyearbook{Ročenka FYKOSu, \Roman{year}. ročník}\else{FYKOS, \Roman{year}. ročník, \arabic{batch}. číslo}\fi,    % title
+    pdfauthor={Organizátoři FYKOSu <fykos@fykos.cz>},     % author
+    pdfsubject={Fyzikální korespondenční seminář MFF UK},   % subject of the document
+}}
 
-  \renewcommand\met@address{%
+\iffksczech
+\renewcommand\met@licence{%
+Fyzikální korespondenční seminář je organizován studenty MFF~UK.
+Je zastřešen Oddělením pro vnější vztahy a~propagaci MFF~UK
+a~podporován Ústavem teoretické fyziky\\
+MFF~UK, jeho zaměstnanci a~Jednotou českých matematiků a~fyziků.
+\nopagebreak\medskip
+
+\footnotesize Toto dílo je šířeno pod licencí Creative Commons
+Attribution-Share Alike 3.0 Unported.\\
+Pro zobrazení kopie této licence navštivte
+\url{http://creativecommons.org/licenses/by-sa/3.0/}.\par
+}
+
+\renewcommand\met@address{%
 \begin{tabular}{r>{\slshape\bfseries}l}
   \multirow{5}{*}{\includegraphics{logo5.eps}} & \FYKOS \\
   & UK, Matematicko-fyzikální fakulta\\
@@ -155,30 +202,48 @@
 
 \href{http://www.facebook.com/Fykos}{\bfseries\slshape http://www.facebook.com/Fykos}}\fi
 }
-\renewcommand\met@licence{
-Fyzikální korespondenční seminář je organizován studenty MFF~UK.
-Je zastřešen Oddělením pro vnější vztahy a~propagaci MFF~UK
-a~podporován Ústavem teoretické fyziky\\
-MFF~UK, jeho zaměstnanci a~Jednotou českých matematiků a~fyziků.
+\fi%iffksczech
+\iffksenglish
+\renewcommand\met@licence{%
+FYKOS is organized by students of Faculty of Mathematics and Physics of Charles University.
+It's part of Public Relations Office activities and is supported by Institute of Theoretical Physics, MFF UK,
+his employees and The Union of Czech Mathematicians and Physicists.
 \nopagebreak\medskip
 
-\footnotesize Toto dílo je šířeno pod licencí Creative Commons
+\footnotesize This work is licensed under Creative Commons
 Attribution-Share Alike 3.0 Unported.\\
-Pro zobrazení kopie této licence navštivte
+To view a copy of the license, visit
 \url{http://creativecommons.org/licenses/by-sa/3.0/}.\par
 }
 
-% to have initialized counters
-\AtBeginDocument{
-\hypersetup{
-    pdftitle=\ifyearbook{Ročenka FYKOSu, \Roman{year}. ročník}\else{FYKOS, \Roman{year}. ročník, \arabic{batch}. číslo}\fi,    % title
-    pdfauthor={Organizátoři FYKOSu <fykos@fykos.cz>},     % author
-    pdfsubject={Fyzikální korespondenční seminář MFF UK},   % subject of the document
-}}} % end FYKOS
+\renewcommand\met@address{%
+\begin{tabular}{r>{\slshape\bfseries}l}
+      \multirow{5}{*}{\includegraphics{logo5.eps}} & \FYKOS \\
+      & Institute of Theoretical Physics\\
+      & Faculty of Mathematics and Physics, Charles University\\
+      & V Holešovičkách 2\\
+      & 180\,00 Praha 8\\
+      & Czech Republic\\
+    \noalign{\smallskip}
+      www: & \normalfont\url{http://fykos.org}\\
+      e-mail: & \normalfont\mail{fykos@fykos.cz}\\
+\end{tabular}
+\nopagebreak\smallskip
+
+{\sffamily\FYKOS{} is also on Facebook \raisebox{-0.2\baselineskip}{%
+        \opt{web}{\includegraphics[height=\baselineskip]{color/fb_logo.eps}}%
+        \opt{print}{\includegraphics[height=\baselineskip]{fb_logo.eps}}%
+    }\nopagebreak
+
+\href{http://www.facebook.com/Fykos}{\bfseries\slshape http://www.facebook.com/Fykos}}
+}
+\fi%iffksenglish
+}% end FYKOS
 
 
 % --- VÝFUK ---
 \DeclareOption{vyfuk}{%
+  \vyfuktrue
   \newcommand\year@tag[1]{\ifcase #1 \or 1\or 2\or 3\or 4\or 5\or \ding{187}\or \ding{188}\or \ding{189}\or \ding{190}\else \@ctrerr\fi{} }
 \newcommand\type@tag[1]{%
 \ifthenelse{\equal{#1}{hard}}{\ding{72}}{}%
@@ -250,6 +315,13 @@ Pro zobrazení kopie této licence navštivte
 \includegraphics[width=23mm]{kniha.eps}\hspace{20pt}\raisebox{0.6cm}
 {Výfučtení: #1}
 }
+% Autoři Výfučtení
+% \serauthors[1] macro is empty operation for TeX, its only purpose at the moment is to play
+% a role of searchable thing for grep in creating of a yearbook (yearbook/scripts/serauthors.sh).
+\newcommand\autori@vyfucteni{}
+\newcommand\serauthors[1]{
+\renewcommand\autori@vyfucteni{#1}
+}
 % poradie
 % \renewcommand\met@headerresults{\centering Pořadí řešitelů po \Roman{solvedbatch}. sérii}
   \renewcommand\met@headerresults{\centering
@@ -263,7 +335,6 @@ Pro zobrazení kopie této licence navštivte
 %\hspace{20pt}\includegraphics[width=23mm]{zmrzlina.eps}
 }
 
-  %pro potreby rocenky (TODO seriál->Výfučtení)
 \renewcommand\met@headeryeartoc{\centering \includegraphics[scale=0.5]{vyfuk_vyfuk.eps}\hspace{10pt}\raisebox{0.6cm}{Obsah}}
 \renewcommand\met@headeryearintro{\centering \includegraphics[scale=0.5]{vyfuk_vyfuk.eps}\hspace{10pt}\raisebox{0.6cm}{Předmluva}}
 \renewcommand\met@headeryeartheorproblems{\centering \includegraphics[scale=0.35]{vyfuk_rovnice-pretahovani.eps}\hspace{10pt}\raisebox{0.3cm}{Zadání teoretických úloh}}
@@ -271,7 +342,8 @@ Pro zobrazení kopie této licence navštivte
 \renewcommand\met@headeryearexpproblems{\centering \includegraphics[scale=0.16]{vyfuk_raketa.eps}\hspace{10pt}\raisebox{0.6cm}{Zadání experimentálních úloh}}
 \renewcommand\met@headeryearexpsolutions{\centering \includegraphics[scale=0.16]{vyfuk_raketa.eps}\hspace{10pt}\raisebox{0.6cm}{Řešení experimentálních úloh}}
 \renewcommand\met@headeryearseries[1]{\centering \includegraphics[scale=0.07]{vyfuk_kvetinac.pdf}\hspace{10pt}\raisebox{0.6cm}{Výfučtení}} %parametr z duvodu genericity
-\renewcommand\met@headeryearserieschapter[1]{Kapitola \arabic{serieschapter}: #1}
+\renewcommand\met@headeryearserieschaptername{\arabic{serieschapter}. Výfučtení}
+\renewcommand\met@headeryearserieschapter[1]{\met@headeryearserieschaptername: #1}
 \renewcommand\met@headeryearseriessolutionsbasic{Řešení úloh z Výfučtení}%bez obrazku pro bookmark
 \renewcommand\met@headeryearseriessolutions{\centering \includegraphics[scale=0.07]{vyfuk_kvetinac.pdf}\hspace{10pt}\raisebox{0.6cm}{\met@headeryearseriessolutionsbasic}}
 \renewcommand\met@headeryearresults{\centering \includegraphics[scale=0.5]{vyfuk_vyfuk.eps}\hspace{10pt}\raisebox{0.6cm}{Pořadí nejlepších řešitelů}}
@@ -287,8 +359,12 @@ Pro zobrazení kopie této licence navštivte
 }
 
 \renewcommand\met@authorspage{
-% TODO implement ''Autoři Výfučtení'' in accordance with ''Náměty úloh''.
-% That means to update templates, write script for generating requested file.
+\textit{Autoři Výfučtení:}\par
+\hspace{\tmpp@rindent}
+\begin{minipage}{\dimexpr\textwidth-\tmpp@rindent-3pt\relax} % 3pt is magic
+\input{authors/serauthors}
+\end{minipage}\par
+%
 \textit{Legenda tábora:} \t@bor\par
 \met@ownauthorspage
 \bigskip

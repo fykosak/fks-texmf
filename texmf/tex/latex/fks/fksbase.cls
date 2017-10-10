@@ -19,9 +19,11 @@
 \RequirePackage{amssymb}
 \RequirePackage[no-math]{fontspec} % no-math is because of mathrm(Omega)
 \RequirePackage{xltxtra} % includes xunicode, fontspec
+\RequirePackage{xunicode}
 \UndeclareUTFcharacter[\UTFencname]{x2026}{\textellipsis} % we want normal ellipsis
 
 \RequirePackage[version=3]{mhchem}
+\RequirePackage{listings}
 
 \RequirePackage[xetex,
   setpagesize=false,
@@ -39,11 +41,11 @@
 \RequirePackage{pifont}
 
 \newfontfamily\cyrillicfont[Ligatures=TeX, % recommended
-	ItalicFont=[cmunti.ttf],
-	BoldFont=[cmunbx.ttf],
-	BoldItalicFont=[cmunbi.ttf],
-	SlantedFont=[cmunsl.ttf]
-]{[cmunrm.ttf]}
+	ItalicFont=[cmunti.otf],
+	BoldFont=[cmunbx.otf],
+	BoldItalicFont=[cmunbi.otf],
+	SlantedFont=[cmunsl.otf]
+]{[cmunrm.otf]}
 
 \widowpenalty 1000 \clubpenalty 1000 \displaywidowpenalty 1000
 
@@ -133,7 +135,7 @@
 }
 
 \AtBeginDocument{%
-  \renewcommand\figurename{Obr.}
+  \renewcommand\figurename{\lngopt{cs}{Obr.}\lngopt{en}{Fig.}}
   \renewcommand\tablename{Tab.}
 }
 
