@@ -268,7 +268,7 @@
 \mathchardef\carka="013B
 
 % decimal point
-	\def\jed@A ##1 {\begingroup\def~{\carka}\mathcode`\.="013A\mathcode`\,="013A \begingroup \mathcode`\e="8000 ##1 \jed@B} % numbers written with dot or comma
+	\def\jed@A ##1 {\begingroup\def~{\,}\mathcode`\.="013A\mathcode`\,="013A \begingroup \mathcode`\e="8000 ##1 \jed@B} % numbers written with dot or comma
 
 %quotation
 \ifdefined\uv\renewcommand\uv[1]{``##1''}\fi
