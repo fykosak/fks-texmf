@@ -80,7 +80,7 @@
 \newcommand\prumer{\varnothing}                             % [obsolete]
 \newcommand\eqdef{\stackrel{\mathup{def}}{=}}               % definition equality
 \providecommand\qed{\hfill\square}                          % konec dukazu, podmínění kvůli beameru
-\newcommand\bod[1]{\mathsf{#1}}                             % geometric point
+\renewcommand\bod[1]{#1}                                    % geometric point
 \newcommand\bb[1]{\mathbb{#1}}                              % blackboard bold
 \newcommand\op[1]{\mathup{#1}}                              % operators
 \newcommand\abs[1]{\left|#1\right|}                         % absolutní hodnota
@@ -139,8 +139,9 @@
 \DeclareMathSymbol{\fkspsi}{\mathalpha}{letters}{32}
 \DeclareMathSymbol{\fksomega}{\mathalpha}{letters}{33}
 
-\DeclareMathAlphabet{\vectalpha}{OT1}{\sfdefault}{bx}{sl} % latin vectors alphabet
-\DeclareMathAlphabet{\vectgralpha}{OML}{cmbr}{bx}{it}     % greek vectors alphabet
+
+\DeclareMathAlphabet{\vectalpha}{OT1}{cmr}{bx}{n}   % latin vectors alphabet
+\DeclareMathAlphabet{\vectgralpha}{OML}{cmr}{bx}{n} % greek vectors alphabet
 
 % redefine greek letters to serif, slanted, bold greek letters
 \newcommand\sw@pgreekletters[1]{%
