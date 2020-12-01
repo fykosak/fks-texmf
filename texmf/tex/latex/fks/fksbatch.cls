@@ -93,7 +93,7 @@
 \newcommand\deadlineS[1]{\renewcommand\@deadlineS{#1}}
 
 % recalculates percents from last series' to percents of the whole year
-\def\hotfix#1{
+\def\calcYearPercent#1{
     \newcount\a\a=#1
     \divide \a by 6
     \the\a
