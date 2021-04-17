@@ -20,6 +20,7 @@
 \newcommand\met@volumeid{Identification of the volume}
 \newcommand\met@address{Contact address}
 \newcommand\met@licence{Licence}
+\newcommand\met@webdomain{Web and mail domain}
 \newcommand\metaprobletter[1]{\expandafter \@metaprobletter \csname c@#1\endcsname}
 \newcommand\metaprobdata[1]{}
 \newcommand\@metaprobletter[1]{\ifcase #1 \or 1\or 2\or 3\or 4\or 5\or P\or E\or S\else \@ctrerr\fi}
@@ -195,6 +196,8 @@ Pro zobrazení kopie této licence navštivte
 
 \href{https://www.facebook.com/FYKOS}{\bfseries\slshape https://www.facebook.com/FYKOS}}\fi
 }
+
+\renewcommand\med@webdomain{fykos.cz}
 \fi%iffksczech
 \iffksenglish
 \renewcommand\met@licence{%
@@ -231,6 +234,7 @@ To view a copy of the license, visit
 
 \href{https://www.facebook.com/FYKOS}{\bfseries\slshape https://www.facebook.com/FYKOS}}
 }
+\renewcommand\med@webdomain{fykos.org}
 \fi%iffksenglish
 }% end FYKOS
 
@@ -247,6 +251,7 @@ To view a copy of the license, visit
   \newcommand\seriesname[1]{\renewcommand\@seriesname{#1}}
   \renewcommand\met@headername{Korespondenční seminář MFF UK pro základní školy}
   \renewcommand\met@shortname{Výfuk}
+  \renewcommand\met@webdomain{vyfuk.mff.cuni.cz}
   \renewcommand\@metaprobletter[1]{\ifcase #1 \or 1\or 2\or 3\or 4\or 5\or E\or V\else \@ctrerr\fi}
   \renewcommand\metaprobdata[1]{%
 % Tags for study years (default are all)

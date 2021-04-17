@@ -21,7 +21,9 @@
   \expandafter\csname sign@me#1\endcsname\fi
 }
 \newcommand\sigmail[1]{%
-  \expandafter\csname sigm@il#1\endcsname
+  \expandafter\ifx\csname sigm@il#1\endcsname\@empty
+  \else
+  \expandafter\csname sigm@il#1\endcsname @\met@webdomain\fi
 }
 
 \newcommand\sign@tureraw[1]{%
