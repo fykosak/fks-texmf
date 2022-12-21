@@ -1,0 +1,105 @@
+%
+% @author Adam Krška <adam.krska@fykos.cz>
+%
+% @description Reusable headings for batches, leaflets etc.
+%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fkssections}[2022/11/11 Reusable headings]
+
+\RequirePackage{fksmeta}
+\RequirePackage[nobottomtitles]{titlesec}
+\renewcommand{\bottomtitlespace}{0.05\textheight}
+
+% ----------------------
+% Generic title and sections style
+% ----------------------
+\titleformat*{\section}{\normalfont\sffamily\slshape\huge}
+\titleformat*{\subsection}{\normalfont\sffamily\slshape\Large}
+\titleformat*{\subsubsection}{\normalfont\sffamily\slshape\normalsize}
+
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.0ex plus .2ex}
+\titlespacing*{\subsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.0ex plus .2ex}
+
+% ----------------------
+% Helper macros for section titles with images
+% ----------------------
+\newcommand\sectionWithImageLeft[2]{
+	\centering \includegraphics[height=15mm]{#1}\hspace{10pt}\raisebox{0.6cm}{#2}
+}
+
+\newcommand\sectionWithImageRight[2]{
+	\centering \raisebox{0.6cm}{#2}\hspace{10pt}\includegraphics[height=15mm]{#1}
+}
+
+\newcommand\sectionWithImages[3]{
+	\centering \includegraphics[height=15mm]{#1}\hspace{10pt}\raisebox{0.6cm}{#3}\hspace{10pt}\includegraphics[height=15mm]{#2}
+}
+
+% ----------------------
+% Deadlines in section titles
+% ----------------------
+
+\newcommand\fksSec@textDeadlineUpload{Termín uploadu: }
+\newcommand\fksSec@textDeadlinePost{Termín odeslání: }
+
+\newcommand\fksSec@styleDeadlineUpload{\Large\slshape\sffamily}
+\newcommand\fksSec@styleDeadlinePost{\fksSec@styleDeadlineUpload} % by default same as upload deadline style
+
+% save deadlines
+\newcommand\fksSec@deadlineUpload{NENÍ ZADÁNO} % upload/receive
+\newcommand\deadlineUpload[1]{\renewcommand\fksSec@deadlineUpload{#1}}
+\newcommand\fksSec@deadlinePost{} % send via post
+\newcommand\deadlinePost[1]{\renewcommand\fksSec@deadlinePost{#1}}
+
+\newcommand\showDeadline{
+	\ifthenelse{\equal{\fksSec@deadlinePost}{}}{%
+		\centerline{\fksSec@styleDeadlineUpload\fksSec@textDeadlineUpload\fksSec@deadlineUpload}
+	}{%
+		\centerline{\fksSec@styleDeadlineUpload\fksSec@textDeadlineUpload\fksSec@deadlineUpload}
+		\centerline{\fksSec@styleDeadlinePost\fksSec@textDeadlinePost\fksSec@deadlinePost}
+	}
+}
+
+% ----------------------
+% Variables for configuring sections
+% ----------------------
+
+% Texts used in sections
+\newcommand\fksSec@textProblemTasks{Zadání \Roman{batch}. série}
+\newcommand\fksSec@textProblemSolutions{Řešení \Roman{solvedbatch}. série}
+\newcommand\fksSec@textSeries[1]{\fksMeta@serialTitle: #1}
+\newcommand\fksSec@textResults{Pořadí řešitelů po \Roman{solvedbatch}. sérii}
+
+% Styles of sections
+\newcommand\fksSec@styleProblemTasks{\fksSec@textProblemTasks}
+\newcommand\fksSec@styleProblemSolutions{\fksSec@textProblemSolutions}
+\newcommand\fksSec@styleSeries[1]{\fksSec@textSeries{#1}}
+\newcommand\fksSec@styleResults{\fksSec@textResults}
+
+% ----------------------
+% Section command definitions
+% ----------------------
+\newcommand\problemsheading{%
+	\section[\fksSec@textProblemTasks]{\fksSec@styleProblemTasks}
+	\setcounter{problem}{0}
+	\vspace{-4pt}
+	\showDeadline
+	\vspace{1.5ex}
+}
+
+\newcommand\solutionheading{%
+	\section[\fksSec@textProblemSolutions]{\fksSec@styleProblemSolutions}
+	\setcounter{problem}{0}%
+}
+
+
+\newcommand\resultsheading{%
+	\section[\fksSec@textResults]{\fksSec@styleResults}
+}
+
+% Load config files
+\RequirePackage{fksconf}
+\fksConf@register{fkssections}
+\fksConf@loadConfig{fkssections}

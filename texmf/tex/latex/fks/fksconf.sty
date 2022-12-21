@@ -1,0 +1,87 @@
+%
+% @author Adam Krška <adam.krska@fykos.cz>
+%
+% @description Loading of config files
+%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fksconf}[2022/12/19 Loading of config files]
+
+\RequirePackage{fkslang}
+
+% This package provides utils for loading and using config files. Package that
+% whats to use config file first needs to register it self, which creates
+% number of variables. Package than can alter these variables using setters.
+% For example, if it wants to have optional config file and not required,
+% package should set the pkgErr variable to empty. Finally, packages calls
+% loadConf, which loads the config files.
+%
+% By default, main package configs are required and lang configs are optional.
+
+% ----------------
+% Register package
+% ----------------
+\newcommand\fksConf@register[1]{
+	\expandafter\gdef\csname fksConf@pkgConf#1\endcsname{%
+		#1.def
+	}
+	\expandafter\gdef\csname fksConf@pkgLangConf#1\endcsname{%
+		#1.\langCode.def
+	}
+	\expandafter\gdef\csname fksConf@pkgErr#1\endcsname{%
+		\PackageError{#1}{%
+			Config file \expandafter\csname fksConf@pkgConf#1\endcsname not found%
+		}{%
+			Check if \expandafter\csname fksConf@pkgConf#1\endcsname is created
+			and TeX can reach it (file must be in the same directory as tex is
+			run from or you need to specify TEXINPUTS variable so tex knows,
+			where to search for it).%
+		}
+	}%
+	\expandafter\gdef\csname fksConf@pkgLangErr#1\endcsname{%
+		\PackageInfo{#1}{%
+			Language config file \expandafter\csname fksConf@pkgLangConf#1\endcsname
+			not found, skipping%
+		}%
+	}%
+}
+
+% ---------------------
+% Setters for variables
+% ---------------------
+\newcommand\fksConf@setConfigFile[2]{%
+	\expandafter\gdef\csname fksConf@pkgConf#1\endcsname{#2}
+}
+
+\newcommand\fksConf@setLangConfigFile[2]{%
+	\expandafter\gdef\csname fksConf@pkgLangConf#1\endcsname{#2}
+}
+
+\newcommand\fksConf@setConfigError[2]{%
+	\expandafter\gdef\csname fksConf@pkgErr#1\endcsname{#2}
+}
+
+\newcommand\fksConf@setLangConfigError[2]{%
+	\expandafter\gdef\csname fksConf@pkgLangErr#1\endcsname{#2}
+}
+
+% ---------------------
+% Config file loader
+% ---------------------
+\newcommand\fksConf@loadConfig[1]{
+	\IfFileExists{\expandafter\csname fksConf@pkgConf#1\endcsname}{%
+		\input{\expandafter\csname fksConf@pkgConf#1\endcsname}
+	}{%
+		\expandafter\csname fksConf@pkgErr#1\endcsname
+	}
+
+	\IfFileExists{\expandafter\csname fksConf@pkgLangConf#1\endcsname}{%
+		\input{\expandafter\csname fksConf@pkgLangConf#1\endcsname}
+		\PackageInfo{#1}{%
+			Language config file \expandafter\csname fksConf@pkgLangConf#1\endcsname
+			found, importing
+		}
+	}{%
+		\expandafter\csname fksConf@pkgLangErr#1\endcsname
+	}
+}

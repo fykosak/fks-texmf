@@ -1,0 +1,56 @@
+\renewcommand\fksMeta@contestNameFull{FYKOS}
+\renewcommand\fksMeta@contestNameShort{FYKOS}
+\renewcommand\fksMeta@webDomain{fykos.org}
+\renewcommand\fksMeta@serialTitle{Serial}
+\renewcommand\fksMeta@problemSolutionTitle{Solution}
+
+\renewcommand\fksMeta@headerRight{year \fksMeta@formatContestYear{year}\qquad number \arabic{batch}/7}
+
+\renewcommand\fksMeta@address{
+	\begin{tabular}{r>{\slshape\bfseries}l}
+		\multirow{5}{*}{\includegraphics{logo1.eps}} & \fksMeta@contestNameShort \\
+			&Institute of Theoretical Physics\\
+			&Faculty of Mathematics and Physics, Charles University\\
+			&V Holešovičkách 2\\
+			&180\,00 Praha 8\\
+			&Czech Republic\\
+			\noalign{\smallskip}
+			www: & \normalfont\url{https://\fksMeta@webDomain}\\
+			e-mail: & \normalfont\mail{fykos@\fksMeta@webDomain}\\
+	\end{tabular}
+	\nopagebreak\smallskip
+
+	{
+		\raisebox{-0.2\baselineskip}{%
+			\opt{web}{\includegraphics[height=\baselineskip]{color/fb_logo.eps}}%
+			\opt{print}{\includegraphics[height=\baselineskip]{fb_logo.eps}}%
+		}~\href{https://www.facebook.com/FYKOS}{\bfseries\slshape /FYKOS} \quad
+		\raisebox{-0.2\baselineskip}{%
+			\opt{web}{\includegraphics[height=\baselineskip]{color/ig_logo.pdf}}%
+			\opt{print}{\includegraphics[height=\baselineskip]{ig_logo.pdf}}%
+		}\href{https://www.instagram.com/fykosak}{~\bfseries\slshape @fykosak} 
+	}
+}
+
+\renewcommand\fksMeta@licence{
+	FYKOS is organized by students of Faculty of Mathematics and Physics of
+	Charles University. It's part of Media Communications and PR Office and is
+	supported by Institute of Theoretical Physics of MFF UK, his employees and
+	The Union of Czech Mathematicians and Physicists. The realization of this
+	project was supported by Ministry of Education, Youth and Sports.
+	\nopagebreak\medskip
+
+	\footnotesize This work is licensed under Creative Commons
+	Attribution-Share Alike 3.0 Unported.\\ To view a copy of the license,
+	visit \url{https://creativecommons.org/licenses/by-sa/3.0/}.\par
+}
+
+\renewcommand\fksMeta@tableHeaderResults{
+	& {\normalfont\bfseries name} % name
+	& school % school
+	& \fksMeta@tableHeaderResultsTasks % tasks
+	& \Roman{solvedbatch} % batch
+	& \textnormal{\uv{\%}\hglue -0.5em} % percent
+	& \textnormal{\%} % percent total
+	& $\Sigma$\\% sum
+}

@@ -1,0 +1,27 @@
+% Define section texts and styles
+\renewcommand\fksSec@textProblemTasks{Zadání \Roman{batch}. série}
+\renewcommand\fksSec@textProblemSolutions{Řešení \Roman{solvedbatch}. série}
+\renewcommand\fksSec@textSeries[1]{\fksMeta@serialTitle: #1}
+\renewcommand\fksSec@textResults{Pořadí řešitelů po \Roman{solvedbatch}. sérii}
+
+\renewcommand\fksSec@styleProblemTasks{
+	\sectionWithImages{tabule2.eps}{plazmaL.eps}{\fksSec@textProblemTasks}}
+\renewcommand\fksSec@styleProblemSolutions{
+	\sectionWithImages{tabule.eps}{zarovkaL.eps}{\fksSec@textProblemSolutions}}
+\renewcommand\fksSec@styleSeries[1]{
+	\sectionWithImageLeft{kniha.eps}{\fksSec@textSeries{#1}}}
+\renewcommand\fksSec@styleResults{
+	\sectionWithImageLeft{stupne123.eps}{\fksSec@textResults}}
+
+% define summer batch
+\@ifundefined{ifsummerbatch}{\newif\ifsummerbatch\summerbatchfalse}{} % ensure ifyearbook exists
+\ifsummerbatch
+	\renewcommand\fksSec@textProblemTasks{Zadání \Roman{batch}. prázdninové série}
+	\renewcommand\fksSec@textProblemSolutions{Řešení \Roman{solvedbatch}. prázdninové série}
+	\renewcommand\fksSec@textResults{Řešení \Roman{solvedbatch}. prázdninové série}
+	\renewcommand\fksSec@styleProblemTasks{
+		\sectionWithImages{zmrzlina.eps}{plazmaL.eps}{\fksSec@textProblemTasks}}
+	\renewcommand\fksSec@styleProblemSolutions{
+		\sectionWithImages{zmrzlina.eps}{zarovkaL.eps}{\fksSec@textProblemSolutions}}
+\fi
+

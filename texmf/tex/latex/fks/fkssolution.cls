@@ -9,26 +9,14 @@
 % inherit from fksbase class
 \LoadClass{fksbase}
 
-\DeclareOption{fykos}{
-	\fancyhead{}
-	\fancyhead[L]{\bfseries\small \met@headername}
-	\fancyhead[R]{\bfseries\small \ifthenelse{\equal{en}{\isolang}}{Solution}{Řešení}~\Roman{year}.\problemnum{solvedbatch}{problem}}
-}
+\RequirePackage{fksmeta}
+\RequirePackage{fksproblems}
 
-\DeclareOption{vyfuk}{
-	\fancyhead{} % To get rid of fksbaseheader, cleaning it up.
-	\pagestyle{fancy} % New definition of header starts here.
-	\renewcommand{\headrulewidth}{0pt}
-	\chead{\setlength{\parindent}{0pt}
-		\colorbox{black}{
-	     	\begin{minipage}{\textwidth-6pt}
-	      		\textcolor{white}{\raisebox{-8.5pt}{\bfseries\sffamily 
-	      		\met@headername{}} \hfill \raisebox{-8.5pt}{\bfseries\sffamily 
-	      		Řešení \Roman{year}.\problemnum{solvedbatch}{problem}}}
-	     	\end{minipage}
-		}
-	}
-	\setlength{\headsep}{5mm}
+\rightheader{\fksMeta@problemSolutionTitle~\fksMeta@formatContestYear{year}.\problemNum{solvedbatch}{problem}}
+
+\hypersetup{
+	pdftitle={\fksMeta@contestNameShort, \fksMeta@formatContestYear{year}.\problemNum{solvedbatch}{problem} \@probname},
+	pdfauthor={\@probsolauthors} % TODO get authors full name
 }
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{fksbase}}

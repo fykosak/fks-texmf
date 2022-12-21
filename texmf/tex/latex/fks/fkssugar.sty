@@ -51,27 +51,27 @@
 \newcommand\der[2]{\frac{\d #1}{\d #2}}                     % prvni derivace
 \newcommand\dder[2]{\frac{\d^2 #1}{\d #2^2}}                % druha derivace
 \newcommand\pder[2]{\frac%                                  % prvni parcialni derivace
-    {\partial#1}{\partial#2}}
+	{\partial#1}{\partial#2}}
 \newcommand\ppder[2]{\frac%                                 % druhá parcialni derivace
-    {\partial^2#1}{\partial#2^2}}
+	{\partial^2#1}{\partial#2^2}}
 \newcommand\tg{\mathop\mathup{tg}\nolimits}                 % cesky tangens
-  \renewcommand\tan{\mathop\mathup{tg}\nolimits}
+	\renewcommand\tan{\mathop\mathup{tg}\nolimits}
 \newcommand\cotg{\mathop\mathup{cotg}\nolimits}             % cesky cotangens
-  \renewcommand\cot{\mathop\mathup{cotg}\nolimits}
+	\renewcommand\cot{\mathop\mathup{cotg}\nolimits}
 \newcommand\cosec{\mathop\mathup{cosec}\nolimits}           % cesky kosecans
-  \renewcommand\csc{\mathop\mathup{cosec}\nolimits}
+	\renewcommand\csc{\mathop\mathup{cosec}\nolimits}
 \newcommand\arctg{\mathop\mathup{arctg}\nolimits}           % cesky arcustangens
-  \renewcommand\arctan{\mathop\mathup{arctg}\nolimits}
+	\renewcommand\arctan{\mathop\mathup{arctg}\nolimits}
 \newcommand\arccotg{\mathop\mathup{arccotg}\nolimits}       % cesky arcuscotangens
-  \newcommand\arccot{\mathop\mathup{arccotg}\nolimits}
+	\newcommand\arccot{\mathop\mathup{arccotg}\nolimits}
 \newcommand\tgh{\mathop\mathup{tgh}\nolimits}               % cesky hyp. tangens
-  \renewcommand\tanh{\mathop\mathup{tgh}\nolimits}
+	\renewcommand\tanh{\mathop\mathup{tgh}\nolimits}
 \newcommand\argcosh{\mathop\mathup{argcosh}\nolimits}       % cesky inverzni hyp. cosinus
 \newcommand\argsinh{\mathop\mathup{argsinh}\nolimits}       % cesky inverzni hyp. sinus
 \newcommand\argtgh{\mathop\mathup{argtgh}\nolimits}         % cesky inverzni hyp. tangens
-  \newcommand\argtanh{\mathop\mathup{argtgh}\nolimits}
+	\newcommand\argtanh{\mathop\mathup{argtgh}\nolimits}
 \newcommand\argcotgh{\mathop\mathup{argcotgh}\nolimits}     % cesky inverzni hyp. cotangens
-  \newcommand\argcoth{\mathop\mathup{argcotgh}\nolimits}
+	\newcommand\argcoth{\mathop\mathup{argcotgh}\nolimits}
 \DeclareMathOperator\tr{Tr}                                 % stopa
 \DeclareMathOperator\sgn{sgn}                               % funkce signum
 \newcommand\Laplace{\Delta}                                 % trojuhelnickovity operator
@@ -104,42 +104,45 @@
 
 % footnote nad interpunkci
 \newcommand{\footnotei}[2]{%
-\mbox{%
-\setbox0\hbox{#1}%
-\copy0%
-\hspace{-\wd0}}%
-\footnote{#2}%
+	\mbox{%
+		\setbox0\hbox{#1}%
+		\copy0%
+		\hspace{-\wd0}%
+	}%
+	\footnote{#2}%
 }
 
 % footnote s labelem
 \newcommand\footnotelbl[2]{%
-\refstepcounter{footnote}\addtocounter{footnote}{-1}% VERY UGLY!!!!
-\label{#1}%
-\footnote{#2}%
+	\refstepcounter{footnote}\addtocounter{footnote}{-1}% VERY UGLY!!!!
+	\label{#1}%
+	\footnote{#2}%
 }
 
 % footnote s labelem nad interpunkci
 \newcommand{\footnotelbli}[3]{%
-\mbox{%
-\setbox0\hbox{#1}%
-\copy0%
-\hspace{-\wd0}}%
-\footnotelbl{#2}{#3}%
+	\mbox{%
+		\setbox0\hbox{#1}%
+		\copy0%
+		\hspace{-\wd0}
+	}%
+	\footnotelbl{#2}{#3}%
 }
 
 % footnote odkazujici na jiny footnote
 \newcommand\footnoteref[1]{%
 	\textsuperscript{\ref{#1}}
-	}
+}
 
 % footnote nad interpunkci odkazujici na jiny footnote
 \newcommand\footnoterefi[2]{%
 	\mbox{%
-	\setbox0\hbox{#1}%
-	\copy0%
-	\hspace{-\wd0}}%
-	\textsuperscript{\ref{#2}}
+		\setbox0\hbox{#1}%
+		\copy0%
+		\hspace{-\wd0}}%
+		\textsuperscript{\ref{#2}%
 	}
+}
 
 % -- greek letters --
 
@@ -186,40 +189,40 @@
 % redefine greek letters to serif, slanted, bold greek letters
 \newcommand\sw@pgreekletters[1]{%
 %  \renewcommand\Gamma{#1\fksGamma} % stack overflow in caption
-  \def\Gamma{#1\fksGamma}
-  \def\Delta{#1\fksDelta}
-  \def\Theta{#1\fksTheta}
-  \def\Lambda{#1\fksLambda}
-  \def\Xi{#1\fksXi}
-  \def\Pi{#1\fksPi}
-  \def\Sigma{#1\fksSigma}
-  \def\Upsilon{#1\fksUpsilon}
-  \def\Phi{#1\fksPhi}
-  \def\Psi{#1\fksPsi}
-  \def\Omega{#1\fksOmega}
-  \def\alpha{#1\fksalpha}
-  \def\beta{#1\fksbeta}
-  \def\gamma{#1\fksgamma}
-  \def\delta{#1\fksdelta}
-  \def\epsilon{#1\fksepsilon}
-  \def\zeta{#1\fkszeta}
-  \def\eta{#1\fkseta}
-  \def\theta{#1\fkstheta}
-  \def\iota{#1\fksiota}
-  \def\kappa{#1\fkskappa}
-  \def\lambda{#1\fkslambda}
-  \def\mu{#1\fksmu}
-  \def\nu{#1\fksnu}
-  \def\xi{#1\fksxi}
-  \def\varpi{#1\fkspi}
-  \def\rho{#1\fksrho}
-  \def\sigma{#1\fkssigma}
-  \def\tau{#1\fkstau}
-  \def\upsilon{#1\fksupsilon}
-  \def\phi{#1\fksphi}
-  \def\chi{#1\fkschi}
-  \def\psi{#1\fkspsi}
-  \def\omega{#1\fksomega}
+	\def\Gamma{#1\fksGamma}
+	\def\Delta{#1\fksDelta}
+	\def\Theta{#1\fksTheta}
+	\def\Lambda{#1\fksLambda}
+	\def\Xi{#1\fksXi}
+	\def\Pi{#1\fksPi}
+	\def\Sigma{#1\fksSigma}
+	\def\Upsilon{#1\fksUpsilon}
+	\def\Phi{#1\fksPhi}
+	\def\Psi{#1\fksPsi}
+	\def\Omega{#1\fksOmega}
+	\def\alpha{#1\fksalpha}
+	\def\beta{#1\fksbeta}
+	\def\gamma{#1\fksgamma}
+	\def\delta{#1\fksdelta}
+	\def\epsilon{#1\fksepsilon}
+	\def\zeta{#1\fkszeta}
+	\def\eta{#1\fkseta}
+	\def\theta{#1\fkstheta}
+	\def\iota{#1\fksiota}
+	\def\kappa{#1\fkskappa}
+	\def\lambda{#1\fkslambda}
+	\def\mu{#1\fksmu}
+	\def\nu{#1\fksnu}
+	\def\xi{#1\fksxi}
+	\def\varpi{#1\fkspi}
+	\def\rho{#1\fksrho}
+	\def\sigma{#1\fkssigma}
+	\def\tau{#1\fkstau}
+	\def\upsilon{#1\fksupsilon}
+	\def\phi{#1\fksphi}
+	\def\chi{#1\fkschi}
+	\def\psi{#1\fkspsi}
+	\def\omega{#1\fksomega}
 }%
 % swap definitions only for vect macro.
 \newcommand\vect[1]{\bgroup\sw@pgreekletters\vectgralpha\vectalpha#1\egroup}
@@ -228,12 +231,13 @@
 %special for upright pi
 \let\varpi\pi
 \IfFileExists{lgrenc.def}{      % part of babel package
-\input{lgrenc.def}
-\DeclareMathAlphabet{\grk}{LGR}{cmr}{m}{n}     % upright greek
-\renewcommand\pi{\grk{p}}
-\newcommand\micro{\grk{m}} %TODO (Xe)LaTeX compatibility, µ (u00b5) has better look
-}%
-{\PackageWarning{fkssugar}{lgrenc.def file not found using italic pi.}}
+	\input{lgrenc.def}
+	\DeclareMathAlphabet{\grk}{LGR}{cmr}{m}{n}     % upright greek
+	\renewcommand\pi{\grk{p}}
+	\newcommand\micro{\grk{m}} %TODO (Xe)LaTeX compatibility, µ (u00b5) has better look
+}{%
+	\PackageWarning{fkssugar}{lgrenc.def file not found using italic pi.}
+}
 
 \let\oldrho=\rho
 %\renewcommand\rho{\varrho}
@@ -250,16 +254,17 @@
 
 % block equations
 \newcommand\eq[2][s]{%
-\ifthenelse{\equal{#1}{s}}{%
-\begin{equation*}#2\end{equation*}%
-}{}%
-\ifthenelse{\equal{#1}{m}}{%
-\begin{align*}#2\end{align*}%
-}{}%
-\ifthenelse{\equal{#1}{a}}{%
-\begin{alignat*}#2\end{alignat*}%
-}{}%
-\ignorespaces}
+	\ifthenelse{\equal{#1}{s}}{%
+		\begin{equation*}#2\end{equation*}%
+	}{}%
+	\ifthenelse{\equal{#1}{m}}{%
+		\begin{align*}#2\end{align*}%
+	}{}%
+	\ifthenelse{\equal{#1}{a}}{%
+		\begin{alignat*}#2\end{alignat*}%
+	}{}%
+	\ignorespaces
+}
 
 \newcommand\lbl[1]{\stepcounter{equation}\tag{\theequation}\label{#1}}
 
@@ -269,7 +274,7 @@
 \newcommand\jd[1]{\ensuremath{\my@jd{#1}}} % pro psani samostatnych jednotek (napr. $\jd{m.s^{-1}}$)
 \newcommand\popi[2]{{$\dfrac{#1}{\jd{#2}}$}} % labels for graphs/tables
 \DeclareExpandableDocumentCommand{\popit}{O{1}O{c}mm}
-  {\multicolumn{#1}{#2}{\popi{#3}{#4}}}% labels for tables
+	{\multicolumn{#1}{#2}{\popi{#3}{#4}}}% labels for tables
 \newcommand\cc[1]{\multicolumn{1}{c}{#1}} % "center cell" - for tabular labels that don't have any unit so we don't have to write \multicolumn{1}{c}{ ... }
 
 % following definition must be loaded after begining of the document
@@ -324,47 +329,48 @@
 \mathcode`\"="8000
 
 \@ifpackageloaded{babel}{%
-  \PackageWarning{fkssugar}{Package babel detected, macros with active double quote ", will be disabled.}
+	\PackageWarning{fkssugar}{Package babel detected, macros with active double quote ", will be disabled.}
 % -- Uncomment if you need use standard babel double quote macros --
 %  \begingroup\uccode`~=`*\uppercase{\endgroup\def~}#1*{\jed@A #1 @@}
 %  \mathcode`\*="8000
-  \catcode`\"=12
+	  \catcode`\"=12
 }{%
 }}
 
 % == muĺtilang support ==
-% TODO
-% Fig. vs. Obr. somehow
-% == english typeset ==
 
+\newcommand\uv[1]{„#1“}
+
+% == english typeset ==
 \def\fkssug@renglish{%
 % tg can be used: https://en.wikipedia.org/wiki/Trigonometric_functions
 
 % decimal point
-	\def\jed@A ##1 {\begingroup\def~{\,}\mathcode`\.="013A\mathcode`\,="013A \begingroup \mathcode`\e="8000 ##1 \jed@B} % numbers written with dot or comma
+\def\jed@A ##1 {\begingroup\def~{\,}\mathcode`\.="013A\mathcode`\,="013A \begingroup \mathcode`\e="8000 ##1 \jed@B} % numbers written with dot or comma
 
 %quotation
-\ifdefined\uv\renewcommand\uv[1]{``##1''}\fi
+\providecommand\uv{}
+\renewcommand\uv[1]{``##1''}\fi
 
 % konstanta
 \renewcommand\const{\mathup{const}}
 
 \renewcommand\tg{\mathop\mathup{tan}\nolimits}              % cesky tangens
-  \renewcommand\tan{\mathop\mathup{tan}\nolimits}
+	\renewcommand\tan{\mathop\mathup{tan}\nolimits}
 \renewcommand\cotg{\mathop\mathup{cot}\nolimits}            % cesky cotangens
-  \renewcommand\cot{\mathop\mathup{cot}\nolimits}
+	\renewcommand\cot{\mathop\mathup{cot}\nolimits}
 \renewcommand\cosec{\mathop\mathup{csc}\nolimits}           % cesky kosecans
-  \renewcommand\csc{\mathop\mathup{csc}\nolimits}
+	\renewcommand\csc{\mathop\mathup{csc}\nolimits}
 \renewcommand\arctg{\mathop\mathup{arctan}\nolimits}        % cesky arcustangens
-  \renewcommand\arctan{\mathop\mathup{arctan}\nolimits}
+	\renewcommand\arctan{\mathop\mathup{arctan}\nolimits}
 \renewcommand\arccotg{\mathop\mathup{arccot}\nolimits}      % cesky arcuscotangens
-  \renewcommand\arccot{\mathop\mathup{arccot}\nolimits}
+	\renewcommand\arccot{\mathop\mathup{arccot}\nolimits}
 \renewcommand\tgh{\mathop\mathup{tanh}\nolimits}            % cesky hyp. tangens
-  \renewcommand\tanh{\mathop\mathup{tanh}\nolimits}
+	\renewcommand\tanh{\mathop\mathup{tanh}\nolimits}
 \renewcommand\argtgh{\mathop\mathup{argtanh}\nolimits}      % cesky inverzni hyp. tangens
-  \renewcommand\argtanh{\mathop\mathup{argtanh}\nolimits}
+	\renewcommand\argtanh{\mathop\mathup{argtanh}\nolimits}
 \renewcommand\argcotgh{\mathop\mathup{argcoth}\nolimits}    % cesky inverzni hyp. cotangens
-  \renewcommand\argcoth{\mathop\mathup{argcoth}\nolimits}
+	\renewcommand\argcoth{\mathop\mathup{argcoth}\nolimits}
 }
 
 % == czech typeset ==
@@ -375,27 +381,28 @@
 \def\jed@A ##1 {\begingroup\def~{\,}\mathcode`\.="013B\mathcode`\,="013B \begingroup \mathcode`\e="8000 ##1 \jed@B} % numbers written with dot or comma
 
 %quotation
-\ifdefined\uv\renewcommand\uv[1]{„##1“}\fi
+\providecommand\uv{}
+\renewcommand\uv[1]{„##1“}\fi
 
 % konstanta
 \renewcommand\const{\mathup{konst}}
 
 \renewcommand\tg{\mathop\mathup{tg}\nolimits}               % cesky tangens
-  \renewcommand\tan{\mathop\mathup{tg}\nolimits}
+	\renewcommand\tan{\mathop\mathup{tg}\nolimits}
 \renewcommand\cotg{\mathop\mathup{cotg}\nolimits}           % cesky cotangens
-  \renewcommand\cot{\mathop\mathup{cotg}\nolimits}
+	\renewcommand\cot{\mathop\mathup{cotg}\nolimits}
 \renewcommand\cosec{\mathop\mathup{cosec}\nolimits}         % cesky kosecans
-  \renewcommand\csc{\mathop\mathup{cosec}\nolimits}
+	\renewcommand\csc{\mathop\mathup{cosec}\nolimits}
 \renewcommand\arctg{\mathop\mathup{arctg}\nolimits}         % cesky arcustangens
-  \renewcommand\arctan{\mathop\mathup{arctg}\nolimits}
+	\renewcommand\arctan{\mathop\mathup{arctg}\nolimits}
 \renewcommand\arccotg{\mathop\mathup{arccotg}\nolimits}     % cesky arcuscotangens
-  \renewcommand\arccot{\mathop\mathup{arccotg}\nolimits}
+	\renewcommand\arccot{\mathop\mathup{arccotg}\nolimits}
 \renewcommand\tgh{\mathop\mathup{tgh}\nolimits}             % cesky hyp. tangens
-  \renewcommand\tanh{\mathop\mathup{tgh}\nolimits}
+	\renewcommand\tanh{\mathop\mathup{tgh}\nolimits}
 \renewcommand\argtgh{\mathop\mathup{argtgh}\nolimits}       % cesky inverzni hyp. tangens
-  \renewcommand\argtanh{\mathop\mathup{argtgh}\nolimits}
+	\renewcommand\argtanh{\mathop\mathup{argtgh}\nolimits}
 \renewcommand\argcotgh{\mathop\mathup{argcotgh}\nolimits}   % cesky inverzni hyp. cotangens
-  \renewcommand\argcoth{\mathop\mathup{argcotgh}\nolimits}
+	\renewcommand\argcoth{\mathop\mathup{argcotgh}\nolimits}
 }
 
 % == package options ==
@@ -409,7 +416,7 @@
     \AtBeginDocument{\fkssug@rczech}
 }
 \DeclareOption*{%
-    \PackageWarning{examplepackage}{Unknown ‘\CurrentOption’}
+    \PackageWarning{fkssugar}{Unknown ‘\CurrentOption’}
 }
 \ProcessOptions\relax
 

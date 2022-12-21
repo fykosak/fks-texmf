@@ -16,13 +16,8 @@
 
 \AtBeginDocument{\hypersetup{pdftitle={}}}
 
-\geometry{ignoreheadfoot,
-  a5paper,
-  margin=0.7cm,
-  headsep=0.2cm}
-
-
-
-
-
-
+\geometry{
+	ignoreheadfoot,
+	margin=0.7cm,
+	headsep=0.2cm
+}

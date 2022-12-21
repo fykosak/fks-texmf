@@ -8,6 +8,7 @@ clean:
 	true
 
 install:
+	rm -rf $(DST)/*
 	mkdir -p $(DST)
 	cp -r texmf/* -t $(DST)/
 

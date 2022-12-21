@@ -1,0 +1,82 @@
+\renewcommand\fksMeta@contestNameFull{Fyzikální korespondenční seminář}
+\renewcommand\fksMeta@contestNameShort{FYKOS}
+\renewcommand\fksMeta@webDomain{fykos.cz}
+\renewcommand\fksMeta@serialTitle{Seriál}
+\renewcommand\fksMeta@problemSolutionTitle{Řešení}
+
+\renewcommand\fksMeta@headerLeft{\fksMeta@contestNameShort}
+\renewcommand\fksMeta@headerRight{ročník \fksMeta@formatContestYear{year}\qquad číslo \arabic{batch}/7}
+
+\@ifundefined{ifyearbook}{\newif\ifyearbook\yearbookfalse}{} % ensure ifyearbook exists
+\renewcommand\fksMeta@address{
+	\begin{tabular}{r>{\slshape\bfseries}l}
+		\multirow{5}{*}{\includegraphics{logo1.eps}} & \fksMeta@contestNameShort \\
+		&UK, Matematicko-fyzikální fakulta\\
+		&Ústav teoretické fyziky\\
+		&V Holešovičkách 2\\
+		&180\,00 Praha 8\\
+		\noalign{\smallskip}
+		www: & \normalfont\url{https://\fksMeta@webDomain}\\
+		e-mail: & \normalfont\mail{fykos@\fksMeta@webDomain}\\
+	\end{tabular}\ifyearbook\relax\else
+	\nopagebreak\smallskip
+
+	{
+		\raisebox{-0.2\baselineskip}{%
+			\opt{web}{\includegraphics[height=\baselineskip]{color/fb_logo.eps}}%
+			\opt{print}{\includegraphics[height=\baselineskip]{fb_logo.eps}}%
+		}~\href{https://www.facebook.com/FYKOS}{\bfseries\slshape /FYKOS} \quad
+		\raisebox{-0.2\baselineskip}{%
+			\opt{web}{\includegraphics[height=\baselineskip]{color/ig_logo.pdf}}%
+			\opt{print}{\includegraphics[height=\baselineskip]{ig_logo.pdf}}%
+		}\href{https://www.instagram.com/fykosak}{~\bfseries\slshape @fykosak} 
+	} \fi
+}
+
+\renewcommand\fksMeta@licence{
+	Fyzikální korespondenční seminář je organizován studenty MFF~UK. Je
+	zastřešen Oddělením propagace a mediální komunikace MFF~UK a~podporován
+	Ústavem teoretické fyziky\\ MFF~UK, jeho zaměstnanci a~Jednotou českých
+	matematiků a~fyziků. Realizace projektu byla podpořena Ministerstvem
+	školství, mládeže a~tělovýchovy. \nopagebreak\medskip
+
+	\footnotesize Toto dílo je šířeno pod licencí Creative Commons
+	Attribution-Share Alike 3.0 Unported.\\ Pro zobrazení kopie této licence
+	navštivte \url{https://creativecommons.org/licenses/by-sa/3.0/}.\par
+}
+
+% data used by problems
+\renewcommand\fksMeta@problemDefaultStudyYears{}
+\renewcommand\fksMeta@problemLetter[1]{%
+	\ifcase #1%
+		\relax\or 1\or 2\or 3\or 4\or 5\or P\or E\or S\else%
+		\@ctrerr%
+	\fi%
+}
+
+% results tables information
+\renewcommand\fksMeta@tableHeaderResultsTasks{1 & 2 & 3 & 4 & 5 & P & E & S} % results table problems header
+\renewcommand\fksMeta@tableHeaderResults{
+	& {\normalfont\bfseries jméno} % name
+	& škola % school
+	& \fksMeta@tableHeaderResultsTasks % tasks
+	& \Roman{solvedbatch} % batch
+	& \textnormal{\uv{\%}\hglue -0.5em} % percent
+	& \textnormal{\%} % percent total
+	& $\Sigma$\\% sum
+}
+
+\renewcommand\fksMeta@tableColumnsResults{
+	\newcolumntype{T}{
+		x{\bfseries} % set row style to bfseries
+		r % order
+		A{\itshape}p{0.22\textwidth} % contestant name
+		^X % school
+		^r^r^r^r^r^r^r^r%points columns
+		@{\hspace{8pt}}A{\bfseries}r % batch
+		@{\hspace{3pt}}A{\itshape}r % percent
+		@{\hspace{3pt}}A{\itshape}r % percent total
+		@{\hspace{6pt}}A{\bfseries}r % sum
+	}
+}
+

@@ -1,0 +1,38 @@
+% Serial authors
+% \serauthors[1] macro is empty operation for TeX, its only purpose at the
+% moment is to play a role of searchable thing for grep in creating of a
+% yearbook (yearbook/scripts/serauthors.sh).
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fksserial}[2022/12/18 Commands for seminar serials]
+
+\RequirePackage{fkssections}
+\RequirePackage{fkssignature}
+
+ % save serial name for later use using aux file
+\newcommand\fksSer@serialName{}
+\newcommand\fksSer@saveSerialName[1]{
+	\AtEndDocument{\immediate\write\@auxout{\string\fksSer@setSerialName{#1}}}
+}
+\newcommand\fksSer@setSerialName[1]{
+	\protected@xdef\fksSer@serialName{#1}
+}
+
+\newcommand\seriesheading[1]{%
+	\renewcommand\fksSer@serialName{#1}
+	\fksSer@saveSerialName{#1}
+	\section[\fksSec@textSeries{#1}]{\fksSec@styleSeries{#1}}
+}
+
+% save serial authors
+\newcommand\fksSer@authors{}
+\newcommand\fksSer@saveAuthors[1]{
+	\AtEndDocument{\immediate\write\@auxout{\string\fksSer@setAuthors{#1}}}
+}
+\newcommand\fksSer@setAuthors[1]{
+	\protected@xdef\fksSer@authors{#1}
+}
+
+\newcommand\serauthors[1]{
+	\fksSer@saveAuthors{#1}
+}

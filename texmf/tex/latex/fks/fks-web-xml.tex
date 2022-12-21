@@ -1,6 +1,5 @@
 \def\UseOption{web}
 
-
 \usepackage{fontenc}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
@@ -13,6 +12,9 @@
 %\usepackage[all]{hypcap}
 %\usepackage{fksfigures}
 
+\usepackage{fksmeta}
+\usepackage{fksproblems}
+\usepackage{fkslang}
 
 \setmainlanguage{czech}
 \setotherlanguage{english}
@@ -40,15 +42,15 @@
 \problemsdir{../problems}
 
 \newcommand{\cycletmp}[1]{%
-    \let\do\tmp
-    {\expandafter\docsvlist\expandafter{#1}}
+	\let\do\tmp
+	{\expandafter\docsvlist\expandafter{#1}}
 }
 \newcommand\tmp{}
 
-\renewcommand\probtask[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\isolang}}{\renewcommand\@probtask{\unexpanded{#2}}}{}}
-\renewcommand\proborigin[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\isolang}}{\renewcommand\@proborigin{\unexpanded{#2}}}{}{}}
-\renewcommand\probfig[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\isolang}}{\renewcommand\@probfig{\unexpanded{#2}}}{}{}}
-\renewcommand\probwebfig[3][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\isolang}}{\renewcommand\@probwebfig{FIGURE\unexpanded{#2}CAPTION\unexpanded{#3}EFIGURE}}{}{}}
+\renewcommand\probtask[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\langCode}}{\renewcommand\@probtask{\unexpanded{#2}}}{}}
+\renewcommand\proborigin[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\langCode}}{\renewcommand\@proborigin{\unexpanded{#2}}}{}{}}
+\renewcommand\probfig[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\langCode}}{\renewcommand\@probfig{\unexpanded{#2}}}{}{}}
+\renewcommand\probwebfig[3][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\langCode}}{\renewcommand\@probwebfig{FIGURE\unexpanded{#2}CAPTION\unexpanded{#3}EFIGURE}}{}{}}
 
 \begin{document}
 
@@ -62,8 +64,8 @@
 % header
 \immediate\write\tempfile{<?xml version="1.0" encoding="utf-8"?>}
 \immediate\write\tempfile{<series version="1" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns="http://fykos.cz/xml/series/schema">}
-\ifthenelse{\equal{\met@shortname}{FYKOS}}{\immediate\write\tempfile{<contest>FYKOS\theyear</contest>}}{}
-\ifthenelse{\equal{\met@shortname}{Výfuk}}{\immediate\write\tempfile{<contest>VYFUK\theyear</contest>}}{}
+\ifthenelse{\equal{\fksMeta@contestNameShort}{FYKOS}}{\immediate\write\tempfile{<contest>FYKOS\theyear</contest>}}{}
+\ifthenelse{\equal{\fksMeta@contestNameShort}{Výfuk}}{\immediate\write\tempfile{<contest>VYFUK\theyear</contest>}}{}
 \immediate\write\tempfile{<number>\thebatch</number>}
 \immediate\write\tempfile{<deadline>\mdeadline</deadline>}
 \immediate\write\tempfile{<deadline-post>\mdeadlineS</deadline-post>}
@@ -72,83 +74,83 @@
 % problem loop
 \setcounter{problem}{0}
 \loop{
-    \stepcounter{problem}
-    \immediate\write\tempfile{<problem>}
-    \immediate\write\tempfile{<number>\theproblem</number>}
-    \immediate\write\tempfile{<label>\metaprobletter{problem}</label>}
-    % name
-    \foreach \lng in {cs,en}{
-        \begin{\langiso{\lng}}
-            \@LoadProblem{\thebatch}{\theproblem}{}
-            \ifthenelse{\equal{\@probdbname}{N/A}}{%
-                \immediate\write\tempfile{<name xml:lang="\lng">\@probname</name>}
-            }{%
-                \immediate\write\tempfile{<name xml:lang="\lng">\@probdbname</name>}
-            }
-        \end{\langiso{\lng}}
-    }
-    %origin
-    \foreach \lng in {cs,en}{%
-        \begin{\langiso{\lng}}
-            \@LoadProblem{\thebatch}{\theproblem}{}
-                \immediate\write\tempfile{<origin xml:lang="\lng">\@proborigin</origin>}
-        \end{\langiso{\lng}}
-    }
-    % points
-    \@LoadProblem{\thebatch}{\theproblem}{}
-    \immediate\write\tempfile{<points>\@probpoints</points>}
-    % topics
-    \immediate\write\tempfile{<topics>}
-    \renewcommand\tmp[1]{\immediate\write\tempfile{<topic>##1</topic>}}
-    \expandafter\cycletmp\@probtopics
-    \immediate\write\tempfile{</topics>}
-    % tags
-    \immediate\write\tempfile{<tags>}
-    \renewcommand\tmp[1]{\immediate\write\tempfile{<tag>##1</tag>}}
-    \expandafter\cycletmp\@probtags
-    \immediate\write\tempfile{</tags>}
-    % authors
-    \immediate\write\tempfile{<authors>}
-    \renewcommand\tmp[1]{\immediate\write\tempfile{<author>##1</author>}}
-    \expandafter\cycletmp\@probauthors
-    \immediate\write\tempfile{</authors>}
-    % sol-authors
-    \immediate\write\tempfile{<solution-authors>}
-    \renewcommand\tmp[1]{\immediate\write\tempfile{<solution-author>##1</solution-author>}}
-    \expandafter\cycletmp\@probsolauthors
-    \immediate\write\tempfile{</solution-authors>}
-    % study-year
-    \immediate\write\tempfile{<study-years>}
-    \renewcommand\tmp[1]{\immediate\write\tempfile{<study-year>##1</study-year>}}
-    \expandafter\cycletmp\@probstudyyears
-    \immediate\write\tempfile{</study-years>}
-    % task
-    \foreach \lng in {cs,en}{%
-        \begin{\langiso{\lng}}
-            \@LoadProblem{\thebatch}{\theproblem}{}
-            \immediate\write\tempfile{<task xml:lang="\lng"><![CDATA[\@probtask]]></task>}
-        \end{\langiso{\lng}}
-    }
+	\stepcounter{problem}
+	\immediate\write\tempfile{<problem>}
+	\immediate\write\tempfile{<number>\theproblem</number>}
+	\immediate\write\tempfile{<label>\problemLetter{problem}</label>}
+	%% name
+	\foreach \lng in {czech,english}{
+		\begin{\lng}
+			\fksProb@loadProblem{\thebatch}{\theproblem}{}
+			\ifthenelse{\equal{\@probdbname}{N/A}}{%
+				\immediate\write\tempfile{<name xml:lang="\langCode">\@probname</name>}
+			}{%
+				\immediate\write\tempfile{<name xml:lang="\langCode">\@probdbname</name>}
+			}
+		\end{\lng}
+	}
+	%origin
+	\foreach \lng in {czech,english}{%
+		\begin{\lng}
+			\fksProb@loadProblem{\thebatch}{\theproblem}{}
+				\immediate\write\tempfile{<origin xml:lang="\langCode">\@proborigin</origin>}
+		\end{\lng}
+	}
+	% points
+	\fksProb@loadProblem{\thebatch}{\theproblem}{}
+	\immediate\write\tempfile{<points>\@probpoints</points>}
+	% topics
+	\immediate\write\tempfile{<topics>}
+	\renewcommand\tmp[1]{\immediate\write\tempfile{<topic>##1</topic>}}
+	\expandafter\cycletmp\@probtopics
+	\immediate\write\tempfile{</topics>}
+	% tags
+	\immediate\write\tempfile{<tags>}
+	\renewcommand\tmp[1]{\immediate\write\tempfile{<tag>##1</tag>}}
+	\expandafter\cycletmp\@probtags
+	\immediate\write\tempfile{</tags>}
+	% authors
+	\immediate\write\tempfile{<authors>}
+	\renewcommand\tmp[1]{\immediate\write\tempfile{<author>##1</author>}}
+	\expandafter\cycletmp\@probauthors
+	\immediate\write\tempfile{</authors>}
+	% sol-authors
+	\immediate\write\tempfile{<solution-authors>}
+	\renewcommand\tmp[1]{\immediate\write\tempfile{<solution-author>##1</solution-author>}}
+	\expandafter\cycletmp\@probsolauthors
+	\immediate\write\tempfile{</solution-authors>}
+	% study-year
+	\immediate\write\tempfile{<study-years>}
+	\renewcommand\tmp[1]{\immediate\write\tempfile{<study-year>##1</study-year>}}
+	\expandafter\cycletmp\@probstudyyears
+	\immediate\write\tempfile{</study-years>}
+	% task
+	\foreach \lng in {czech,english}{%
+		\begin{\lng}
+			\fksProb@loadProblem{\thebatch}{\theproblem}{}
+			\immediate\write\tempfile{<task xml:lang="\langCode"><![CDATA[\@probtask]]></task>}
+		\end{\lng}
+	}
     % figures
 %    \newcommand\illfig[5][o]{\unexpanded{FIGURE##1CAPTION\unexpanded{##3}EFIGURE}}
 %    \newcommand\illfigi[6][o]{FIGURE##2CAPTION##3EFIGURE}
 %    \newcommand\fullfig[5][1=h, 5=0]{FIGURE##2CAPTION##3EFIGURE}
    
-    \immediate\write\tempfile{<figures>}
-    \foreach \lng in {cs,en}{%
-        \begin{\langiso{\lng}}
-            \@LoadProblem{\thebatch}{\theproblem}{}
-            \ifthenelse{\equal{\@probwebfig}{FIGUREN/ACAPTIONN/AEFIGURE}}{%
-                \immediate\write\tempfile{<figure xml:lang="\lng">\@probfig</figure>}
-            }{%
-                \immediate\write\tempfile{<figure xml:lang="\lng">\@probwebfig</figure>}
-            }%
-        \end{\langiso{\lng}}
-    }
-    \immediate\write\tempfile{</figures>}
+	\immediate\write\tempfile{<figures>}
+	\foreach \lng in {czech,english}{%
+		\begin{\lng}
+			\fksProb@loadProblem{\thebatch}{\theproblem}{}
+			\ifthenelse{\equal{\@probwebfig}{FIGUREN/ACAPTIONN/AEFIGURE}}{%
+				\immediate\write\tempfile{<figure xml:lang="\langCode">\@probfig</figure>}
+			}{%
+				\immediate\write\tempfile{<figure xml:lang="\langCode">\@probwebfig</figure>}
+			}%
+		\end{\lng}
+	}
+	\immediate\write\tempfile{</figures>}
 
-    % end problems
-    \immediate\write\tempfile{</problem>}
+	% end problems
+	\immediate\write\tempfile{</problem>}
 }\ifnum\theproblem<\theproblemcount
 \repeat
 % end file

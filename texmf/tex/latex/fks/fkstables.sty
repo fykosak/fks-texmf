@@ -14,6 +14,8 @@
 \RequirePackage{rotating}
 \RequirePackage{longtable}
 
+\RequirePackage{fksmeta}
+
 % used to style whole rows or rows and columns combined
 % example header: \begin{tabular}{x{\bfseries}rA{\itshape}l^l^r^r^r^r^r^r^r^rA{\bfseries}rA{\itshape}rA{\bfseries}r}
 %                 to highlight row use \rowstyle{<style>}
@@ -22,13 +24,13 @@
 \newcolumntype{^}{>{\currentrowstyle}}
 \newcolumntype{A}[1]{>{\currentrowstyle#1}}
 \newcommand{\rowstyle}[1]{\gdef\currentrowstyle{#1}%
-  #1\ignorespaces
+	#1\ignorespaces
 }
 
 % for decimal numbers
 \newcolumntype{d}[1]{D{.}{,}{#1}}
 
-\met@resultscols % this defines new column type as in fksmeta
+\fksMeta@tableColumnsResults % this defines new column type as in fksmeta
 
 
 \newcounter{RESendline}%
@@ -46,7 +48,7 @@
 		\setlength{\tabcolsep}{2pt}
 		\begin{tabularx}{\textwidth}{T} % batch, percent, sum
 			\rowstyle{\bfseries}
-			\met@resultsheader
+			\fksMeta@tableHeaderResults%
 			\ifthenelse{\equal{#1}{0}}{%
 				\input{results/#2.tex} %TODO path
 			}{
@@ -67,96 +69,130 @@
 %     * Nejak blbne
 % * Psychicke problemy reste vlozenim \newpage [sem tam trochu neocekavane misto] nebo manualnim rozdelenim
 \newcommand\resultstabsplit[2][0]{%
-    \setlength{\tableheight}{\textheight}%
-    \addtolength{\tableheight}{4mm}%ideálně co nejvíce, ale je z bulharska
-    \setcounter{RESinit}{1}%
-    \ifnum#1=-1
-        \setcounter{linecount}{-1}
-        \newread\lf
-        \openin\lf results/#2
-        \unless\ifeof\lf
-                \loop\unless\ifeof\lf
-                    \readline\lf to\lfline
-                    \addtocounter{linecount}{1}
-                    \message{R}%
-                \repeat
-                \closein\lf
-        \fi
-        \message{Auto (#2): \thelinecount}
-        \resultstabR[\thelinecount]{#2}%
-    \else
-        \resultstabR[#1]{#2}%
-    \fi
+	\setlength{\tableheight}{\textheight}%
+	\addtolength{\tableheight}{4mm}%ideálně co nejvíce, ale je z bulharska
+	\setcounter{RESinit}{1}%
+	\ifnum#1=-1
+		\setcounter{linecount}{-1}
+		\newread\lf
+		\openin\lf results/#2
+		\unless\ifeof\lf
+				\loop\unless\ifeof\lf
+					\readline\lf to\lfline
+					\addtocounter{linecount}{1}
+					\message{R}%
+				\repeat
+				\closein\lf
+		\fi
+		\message{Auto (#2): \thelinecount}
+		\resultstabR[\thelinecount]{#2}%
+	\else
+		\resultstabR[#1]{#2}%
+	\fi
 }
 
 % Tabulka cast, manualne urcena
 % {prvni}{posledni}{soubor}
 \newcommand\resultstabspart[3]{% from to file
-    \setcounter{RESinit}{#1}%
-    \setcounter{RESendline}{#2}%
-    \resultsmakebox[1]{#3}%
-    \begin{center}\box\RESbox\end{center}%
+	\setcounter{RESinit}{#1}%
+	\setcounter{RESendline}{#2}%
+	\resultsmakebox[1]{#3}%
+	\begin{center}\box\RESbox\end{center}%
 }
 
 \newcommand\resultsmakebox[2][0]{
-  \ifnum\theRESinit=\theRESendline\else%
-    \savebox{\RESbox}{\hbox{%
-        \small\setlength{\tabcolsep}{2pt}%
-        \begin{tabularx}{\textwidth}{T}% batch, percent, sum
-            \rowstyle{\bfseries}%
-            \met@resultsheader%
-            \ifthenelse{\equal{#1}{0}}{%
-                \input{results/#2.tex}%TODO path
-            }{%
-%hlavicka u pokracovani
-                \ifnum\value{RESinit}>1\partialinput{1}{2}{results/#2}\fi%
-                \partialinput{\theRESinit}{\theRESendline}{results/#2}%TODO path
-            }%
-        \end{tabularx}%
-    }}% end hbox
-  \fi%
+	\ifnum\theRESinit=\theRESendline\else%
+		\savebox{\RESbox}{\hbox{%
+			\small\setlength{\tabcolsep}{2pt}%
+			\begin{tabularx}{\textwidth}{T}% batch, percent, sum
+				\rowstyle{\bfseries}%
+				\fksMeta@tableHeaderResults%
+				\ifthenelse{\equal{#1}{0}}{%
+					\input{results/#2.tex}%TODO path
+				}{%
+	%hlavicka u pokracovani
+					\ifnum\value{RESinit}>1\partialinput{1}{2}{results/#2}\fi%
+					\partialinput{\theRESinit}{\theRESendline}{results/#2}%TODO path
+				}%
+			\end{tabularx}%
+		}}% end hbox
+	\fi%
 }
 
 % TODO pretekajici prijmeni/skola
 
 \newcommand\resultstabR[2][0]{%
 % vytvoreni boxu s celou tabulkou
-    \ifnum#1=0\setcounter{RESendline}{60}\else\setcounter{RESendline}{#1}\fi%
-    \addtocounter{RESendline}{-60}%
-    \ifnum\theRESendline>\theRESinit\setcounter{RESendline}{\theRESinit}\fi%
-    \addtocounter{RESendline}{60}%
+	\ifnum#1=0\setcounter{RESendline}{60}\else\setcounter{RESendline}{#1}\fi%
+	\addtocounter{RESendline}{-60}%
+	\ifnum\theRESendline>\theRESinit\setcounter{RESendline}{\theRESinit}\fi%
+	\addtocounter{RESendline}{60}%
 %
-    \resultsmakebox[#1]{#2}%
-    \setlength{\RESenddist}{\pagetotal}%
-    \addtolength{\RESenddist}{\ht\RESbox}%
-    \addtolength{\RESenddist}{\dp\RESbox}%
+	\resultsmakebox[#1]{#2}%
+	\setlength{\RESenddist}{\pagetotal}%
+	\addtolength{\RESenddist}{\ht\RESbox}%
+	\addtolength{\RESenddist}{\dp\RESbox}%
 % pokud se tam box vejde, vlozi se
-    \ifdim\RESenddist<\tableheight%pagegoal%
-        \hbox{\hss\box\RESbox\hss}\message{Veslo se (#2).}%
-%        \begin{center}\fbox{\box\RESbox}\end{center}\message{Veslo se (#2).}%
+	\ifdim\RESenddist<\tableheight%pagegoal%
+		\hbox{\hss\box\RESbox\hss}\message{Veslo se (#2).}%
+		%\begin{center}\fbox{\box\RESbox}\end{center}\message{Veslo se (#2).}%
 % jinak: urceni poctu radek, co se tam vejdou
-    \else%
-        \setcounter{resultstmp}{5}%
-        \loop\ifnum\theresultstmp>0\addtocounter{resultstmp}{-1}%
-            \resultsmakebox[1]{#2}%
-	    \setlength{\RESenddist}{\pagetotal}%
-            \addtolength{\RESenddist}{\ht\RESbox}%
-            \addtolength{\RESenddist}{\dp\RESbox}%
-            \addtolength{\RESenddist}{\baselineskip}%
-            \ifnum\theRESendline=\theRESinit\setcounter{resultstmp}{-2}\fi%chyba
-            \ifdim\RESenddist>\tableheight%
-                \addtocounter{RESendline}{-1}%
-                \addtocounter{resultstmp}{1}
-                \message{D}%
-            \fi%
-        \repeat%
-        \hbox{\hss\box\RESbox\hss}\eject%
-        \message{Vesla se pouze cast.(#2)}%
-        \ifnum\theRESendline<#1%
-            \addtocounter{RESendline}{1}%
-            \setcounter{RESinit}{\theRESendline}%
-            \resultstabR[#1]{#2}%
-        \fi%
-    \fi%
+	\else%
+		\setcounter{resultstmp}{5}%
+		\loop\ifnum\theresultstmp>0\addtocounter{resultstmp}{-1}%
+			\resultsmakebox[1]{#2}%
+		\setlength{\RESenddist}{\pagetotal}%
+			\addtolength{\RESenddist}{\ht\RESbox}%
+			\addtolength{\RESenddist}{\dp\RESbox}%
+			\addtolength{\RESenddist}{\baselineskip}%
+			\ifnum\theRESendline=\theRESinit\setcounter{resultstmp}{-2}\fi%chyba
+			\ifdim\RESenddist>\tableheight%
+				\addtocounter{RESendline}{-1}%
+				\addtocounter{resultstmp}{1}
+				\message{D}%
+			\fi%
+		\repeat%
+		\hbox{\hss\box\RESbox\hss}\eject%
+		\message{Vesla se pouze cast.(#2)}%
+		\ifnum\theRESendline<#1%
+			\addtocounter{RESendline}{1}%
+			\setcounter{RESinit}{\theRESendline}%
+			\resultstabR[#1]{#2}%
+		\fi%
+	\fi%
 }
 
+% include only range of lines
+% \partialinput{from}{to}{file}
+\newread\pin@file
+\newcounter{pinlineno}
+\newcommand\pin@accu{}
+\newcommand\pin@ext{pintmp}
+% inputs #3, selecting only lines #1 to #2 (inclusive)
+\newcommand*\partialinput [3] {%
+	\IfFileExists{#3}{%
+		\openin\pin@file #3
+		% skip lines 1 to #1 (exclusive)
+		\setcounter{pinlineno}{1}
+		\@whilenum\value{pinlineno}<#1 \do{%
+			\read\pin@file to\pin@line
+			\stepcounter{pinlineno}%
+		}
+		% prepare reading lines #1 to #2 inclusive
+		\addtocounter{pinlineno}{-1}
+		\let\pin@accu\empty
+		\begingroup
+		\endlinechar\newlinechar
+		\@whilenum\value{pinlineno}<#2 \do{%
+			% use safe catcodes provided by e-TeX's \readline
+			\readline\pin@file to\pin@line
+			\edef\pin@accu{\pin@accu\pin@line}%
+			\stepcounter{pinlineno}%
+		}
+		\closein\pin@file
+		\expandafter\endgroup
+		\scantokens\expandafter{\pin@accu}%
+	}{%
+	\errmessage{File `#3' doesn't exist!}%
+}%
+}

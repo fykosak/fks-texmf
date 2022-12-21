@@ -11,76 +11,109 @@
 \ProvidesPackage{fksfigures}[2011/09/11 FYKOS figures manipulation]
 
 \RequirePackage{graphicx}
-\RequirePackage{wrapfig}
-%\RequirePackage{color}
+\RequirePackage[verbose]{wrapfig}
 \RequirePackage{ifthen}
 \RequirePackage{calc}
-\RequirePackage[center]{caption}
-\RequirePackage[all]{hypcap} % links jump to an image, not the caption
 \RequirePackage{optional}
-\RequirePackage{subfig}
 \RequirePackage{xargs}
+\RequirePackage{needspace}
+
+% packages for general use in documents
+\RequirePackage{subfig}
 \RequirePackage{tikz}
 
+% setup captions
+\RequirePackage[justification=centering]{caption}
+\captionsetup[wrapfigure]{}
+\captionsetup[wraptable]{}
+
 \newcommand\centercaption{%
-  \captionsetup{format=plain,labelsep=newline,justification=centering}}
-% paths to graphics
-\newcommand{\@myinputpath}[1]{
-\ifx\input@path\@undefined
-\def\input@path{#1}
-\else
-\g@addto@macro{\input@path}{#1}
-\fi
-\graphicspath{#1}}
+	\captionsetup{format=plain,labelsep=newline,justification=centering}}
 
-% @problemsdir must be somehow defined also here not to damage input@path functionality
-\ifx\@problemsdir\@undefined
-\def\@problemsdir{.}
-\fi
+% ----------------
+% Image paths
+% ----------------
 
-\opt{web}{%
- \@myinputpath{{./graphics/color/}{\@problemsdir/graphics/color/}{./graphics/}{\@problemsdir/graphics/}}
-}\opt{print}{%
- \@myinputpath{{./graphics/}{\@problemsdir/graphics/}}
+% add directory to path
+% if web option specified, add color subfolder first
+\newcommand\addgraphicsdir[1]{
+	\ifx\input@path\@undefined
+		\def\input@path{}
+	\fi
+	\opt{web}{
+		\g@addto@macro{\input@path}{{#1color/}}
+	}
+	\g@addto@macro{\input@path}{{#1}}
+	\expandafter\graphicspath\expandafter{\input@path}
 }
+
+% for specifying default path in config
+\newcommand\fksFig@defaultPath{}
+
+% TODO move to config
+\renewcommand\fksFig@defaultPath{./graphics/}
+
+% set path to defaults
+\newcommand\fksFig@resetPath{
+	\def\input@path{}
+	\graphicspath{}
+	\addgraphicsdir{\fksFig@defaultPath}
+}
+\fksFig@resetPath
+
+
+% -------------------
+% Graphics commands
+% -------------------
 
 % to avoid label name collision in yearbook, figures inserted in
 \newcommand\labelsuffix{}
-\newcommand\@putlabel[1]{%
+\newcommand\fksFig@label[1]{%
 \ifthenelse{\equal{#1}{}}{}{\label{#1\labelsuffix}}}
 
-% commands for inserting figures syntax is command[position]{filename}{caption}{label}[opts]
-
-\newcommandx*\fullfig[5][1=h, 5=0]{
-\ifthenelse{\equal{#3}{}}{\capstartfalse}{}
-\begin{figure}[#1]
-\centering
-\ifthenelse{\equal{#5}{0}}{
-	\includegraphics{#2}
-}{
-	\includegraphics[#5]{#2}
+% Command for figures across the whole line
+% usage: \fullfig[position]{filename}{caption}{label}[opts][caption list entry]
+\newcommandx*\fullfig[6][1=htb, 5=0, 6=]{
+	\begin{figure}[#1]
+		\centering
+		\ifthenelse{\equal{#5}{0}}{%
+			\includegraphics{#2}%
+		}{%
+			\includegraphics[#5]{#2}%
+		}
+		\ifthenelse{\equal{#3}{}}{}{%
+			\ifthenelse{\equal{#6}{}}{%
+				\caption{#3}%
+			}{%
+				\caption[#6]{#3}%
+			}%
+		}
+		\fksFig@label{#4}
+	\end{figure}%
+	\ignorespaces
 }
-%\includegraphics{#2}
-\ifthenelse{\equal{#3}{}}{}{\caption{#3}}
-\@putlabel{#4}
-\end{figure}
-\ifthenelse{\equal{#3}{}}{\capstarttrue}{}
-\ignorespaces}
 
-\newcommand\plotfig[4][h]{%
-\ifyearbook\immediate\write\plotsfile{#2}\else\relax\fi
-\ifthenelse{\equal{#3}{}}{\capstartfalse}{}
-\begin{figure}[#1]
-\centering
-  \opt{web}{%
-  \input{color/#2}
-  }\opt{print}{%
-  \input{#2}}
-\ifthenelse{\equal{#3}{}}{}{\caption{#3}}
-\@putlabel{#4}
-\end{figure}%
-\ifthenelse{\equal{#3}{}}{\capstarttrue}{}%
-\ignorespaces}
+\newcommandx*\plotfig[5][1=htb, 5=]{%
+	\ifyearbook\immediate\write\plotsfile{#2}\else\relax\fi
+	\begin{figure}[#1]
+		\centering
+		\opt{web}{%
+			\input{color/#2}
+		}
+		\opt{print}{%
+			\input{#2}
+		}
+		\ifthenelse{\equal{#3}{}}{}{%
+			\ifthenelse{\equal{#5}{}}{%
+				\caption{#3}%
+			}{%
+				\caption[#5]{#3}%
+			}%
+		}
+		\fksFig@label{#4}
+	\end{figure}%
+	\ignorespaces
+}
 
 % specialized for third illustration figures
 % maximal width of illustration image is 0.28\textwidth
@@ -90,40 +123,65 @@
 \newif\ifilltop
 \illtopfalse
 \newlength\img@width
-
-%\newcommand\illfig[5][o]{%
-%\settowidth{\img@width}{\includegraphics{#2}}%
-%\setlength{\img@width}{\minof{\img@width}{0.28\textwidth}}%
-%\begin{wrapfigure}[#5]{#1}{1.05\img@width}
-%\ifilltop\else\vspace{-\intextsep}\fi%
-%\includegraphics[width=\img@width]{#2}%
-%\ifthenelse{\equal{#3}{}}{}{\caption{#3}}%
-%\@putlabel{#4}%
-%\end{wrapfigure}\ignorespaces}
+\newlength\img@height
 
 \newcommand\illfigi[6][o]{%
-\settowidth{\img@width}{\includegraphics{#2}}%
-\setlength{\img@width}{\minof{\img@width}{#6\textwidth}}%
-\begin{wrapfigure}[#5]{#1}{1.05\img@width}
-\ifilltop\else\vspace{-\intextsep}\fi%
-\includegraphics[width=\img@width]{#2}%
-\ifthenelse{\equal{#3}{}}{}{\caption{#3}}%
-\@putlabel{#4}%
-\end{wrapfigure}\ignorespaces}
+	\settowidth{\img@width}{\includegraphics{#2}}%
+	\setlength{\img@width}{\minof{\img@width}{#6\textwidth}}%
+	\settoheight{\img@height}{\includegraphics[width=\img@width]{#2}}%
+	\needspace{\img@height} % ensure that wrapfigure can fit on the page
+	\begin{wrapfigure}[#5]{#1}{1.05\img@width}
+		\centering
+		\ifilltop\else\vspace{-\intextsep}\fi%
+		\includegraphics[width=\img@width]{#2}%
+		\ifthenelse{\equal{#3}{}}{}{\caption{#3}}%
+		\fksFig@label{#4}%
+	\end{wrapfigure}
+	\ignorespaces
+}
 
 
 \newcommand\illfig[5][o]{\illfigi[#1]{#2}{#3}{#4}{#5}{0.28}}
 
+% -----------------------------
+% Graphics and tables captions
+% -----------------------------
+
+% setter of figurename
+% usage: \setfigurename{<language>}{<figure name>}
+\newcommand{\setfigurename}[2]{
+	\expandafter\addto\csname captions#1\endcsname{
+		\renewcommand{\figurename}{#2}
+	}
+}
+
+% setter of tablename
+% usage: \settablename{<language>}{<figure name>}
+\newcommand{\settablename}[2]{
+	\expandafter\addto\csname captions#1\endcsname{
+		\renewcommand{\tablename}{#2}
+	}
+}
+
+% default values
+\setfigurename{czech}{Obr.}
+\setfigurename{slovak}{Obr.}
+\setfigurename{english}{Fig.}
+\settablename{czech}{Tab.}
+\settablename{slovak}{Tab.}
+\settablename{english}{Tab.}
+
 % plot figures are listed down, in yearbook they have to be narrower
+\@ifundefined{ifyearbook}{\newif\ifyearbook\yearbookfalse}{} % ensure ifyearbook exists
 \AtBeginDocument{
-  \ifyearbook
-  \newwrite\plotsfile
-  \immediate\openout\plotsfile=plots.txt
-  \else\relax\fi
+	\ifyearbook
+	\newwrite\plotsfile
+	\immediate\openout\plotsfile=plots.txt
+	\else\relax\fi
 }
 \AtEndDocument{
-  \ifyearbook
-  \newwrite\plotsfile
-    \immediate\closeout\plotsfile
-  \else\relax\fi
+	\ifyearbook
+	\newwrite\plotsfile
+	\immediate\closeout\plotsfile
+	\else\relax\fi
 }

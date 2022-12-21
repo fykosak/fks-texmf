@@ -1,0 +1,110 @@
+\renewcommand\fksMeta@contestNameFull{Výpočty fyzikálních úkolů} % Korespondenční seminář MFF UK pro základní školy
+\renewcommand\fksMeta@contestNameShort{Výfuk}
+\renewcommand\fksMeta@webDomain{vyfuk.mff.cuni.cz}
+\renewcommand\fksMeta@serialTitle{Výfučtení}
+\renewcommand\fksMeta@problemSolutionTitle{Řešení}
+
+\renewcommand\fksMeta@headerLeft{\fksMeta@contestNameFull}
+\renewcommand\fksMeta@headerRight{ročník \fksMeta@formatContestYear{year}\qquad číslo \arabic{batch}/7}
+
+\renewcommand\fksMeta@address{
+	\begin{tabular}{r>{\slshape\bfseries}l}
+		\multirow{5}{*}{\includegraphics[width=2cm]{NB.eps}}
+		&Korespondenční seminář Výfuk \\
+		&UK, Matematicko-fyzikální fakulta\\
+		&V Holešovičkách 2\\
+		&180\,00 Praha 8\\
+		\noalign{\smallskip}
+		www: & \normalfont\url{https://\fksMeta@webDomain}\\
+		e-mail: & \normalfont\mail{vyfuk@\fksMeta@webDomain}\\
+	\end{tabular}
+	\nopagebreak\smallskip
+
+	{\sffamily
+		\raisebox{-0.2\baselineskip}{%
+			\opt{web}{\includegraphics[height=\baselineskip]{color/fb_logo.eps}}%
+			\opt{print}{\includegraphics[height=\baselineskip]{fb_logo.eps}}%
+		}~\href{https://www.facebook.com/ksvyfuk}{\bfseries\slshape /ksvyfuk} \quad
+		\raisebox{-0.2\baselineskip}{%
+			\opt{web}{\includegraphics[height=\baselineskip]{color/ig_logo.pdf}}%
+			\opt{print}{\includegraphics[height=\baselineskip]{ig_logo.pdf}}%
+		}~\href{https://www.instagram.com/ksvyfuk}{\bfseries\slshape @ksvyfuk}
+	}
+}
+
+\renewcommand\fksMeta@licence{
+	Korespondenční seminář Výfuk je organizován studenty a přáteli MFF~UK.
+	Je zastřešen Oddělením propagace a~mediální komunikace MFF~UK
+	a~podporován Katedrou didaktiky fyziky
+	MFF~UK, jejími zaměstnanci a~Jednotou českých matematiků a~fyziků.
+	Realizace projektu byla podpořena Ministerstvem školství, mládeže
+	a~tělovýchovy.
+	\nopagebreak\medskip
+
+	\footnotesize Toto dílo je šířeno pod licencí Creative Commons
+	Attribution-Share Alike 3.0 Unported.\\
+	Pro zobrazení kopie této licence navštivte
+	\url{https://creativecommons.org/licenses/by-sa/3.0/}.\par
+}
+
+% define letters for problems
+\renewcommand\fksMeta@problemDefaultStudyYears{6,7,8,9}
+\renewcommand\fksMeta@problemLetter[1]{%
+	\ifcase #1%
+		\relax\or 1\or 2\or 3\or 4\or 5\or E\or V\else%
+		\@ctrerr%
+	\fi%
+}
+
+% results tables information
+\renewcommand\fksMeta@tableHeaderResultsTasks{1 & 2 & 3 & 4 & 5 & P & V} % results table problems header
+\renewcommand\fksMeta@tableHeaderResults{
+	& {\normalfont\bfseries jméno} % name
+	& škola % school
+	& \fksMeta@tableHeaderResultsTasks % tasks
+	& \Roman{solvedbatch} % batch
+	& $\Sigma$\\% sum
+}
+
+\renewcommand\fksMeta@tableColumnsResults{
+	\newcolumntype{T}{
+		x{\bfseries} % set row style to bfseries
+		r % order
+		A{\itshape}p{0.22\textwidth} % contestant name
+		^X % school
+		^r^r^r^r^r^r^r%points columns
+		@{\hspace{12pt}}A{\bfseries}r % batch
+		@{\hspace{8pt}}A{\bfseries}r % sum
+	}
+}
+
+% change styles
+\fancypagestyle{black}[fancy]{
+	% Layout settings brought from fksbase.cls, redefining headers.
+	\fancyhead{} % To get rid of fksbaseheader, cleaning it up.
+	\renewcommand{\headrulewidth}{0pt}
+	\chead{
+		\setlength{\parindent}{0pt}
+		\colorbox{black}{
+			\begin{minipage}{\textwidth-12pt}
+				\textcolor{white}{\raisebox{-8.5pt}{\bfseries\sffamily\fksMeta@headerLeft{}}
+				\hfill \raisebox{-8.5pt}{\bfseries\sffamily\fksMeta@headerRight}}
+			\end{minipage}
+		}
+	}
+	\setlength{\headsep}{5mm}
+}
+\pagestyle{black} % New definition of header starts here.
+
+\fancypagestyle{titlepage}[black]{
+	\fancyfoot{}
+	\cfoot{\includegraphics[height=43pt]{matfyz_nove_logo.eps}}
+}
+
+\renewcommand\maketitle{%
+	\thispagestyle{titlepage}
+
+	\vspace{-\parskip}\vspace{5mm}
+	{\centering\includegraphics[width=\textwidth]{vyfuk_hlavicka.eps}}%
+	\vspace{8mm}
+}

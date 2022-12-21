@@ -1,529 +1,94 @@
 %
 % @author Michal Koutný <michal@fykos.cz>
+% @author Adam Krška <adam.krska@fykos.cz>
 %
 % @description Informations about single seminars. Keeps the
-%              LaTeX classes generic.
+%              LaTeX classes generic. Includes macro definitions meant to be
+%              used in other places. Specific contest informations are
+%              specified in .def files for each contest and its language.
 %
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{fksmeta}[2011/09/11 Information about seminars]
 
-\newcommand\metavar[1]{%
-  \expandafter\ifx\csname met@#1\endcsname\relax
-  \PackageWarning{fksmeta}{Undefined variable #1}
-  \else
-  \expandafter\csname met@#1\endcsname\fi
-}
-\newcommand\FYKOS{{FYKOS}}
-\newcommand\VYFUK{{Výfuk}}
-\newcommand\met@headername{Name displayed in the header}
-\newcommand\met@shortname{Short name of the contest}
-\newcommand\met@volumeid{Identification of the volume}
-\newcommand\met@address{Contact address}
-\newcommand\met@licence{Licence}
-\newcommand\met@webdomain{Web and mail domain}
-\newcommand\met@seriestitle{Seriál}
-\newcommand\metaprobletter[1]{\expandafter \@metaprobletter \csname c@#1\endcsname}
-\newcommand\metaprobdata[1]{}
-\newcommand\@metaprobletter[1]{\ifcase #1 \or 1\or 2\or 3\or 4\or 5\or P\or E\or S\else \@ctrerr\fi}
-\newcommand\metayear[1]{\Roman{#1}}
-\newcommand\met@headerproblems{Zadání \Roman{batch}. série}
-\newcommand\met@summerheaderproblems{Zadání \Roman{batch}. části prázdninové série}
-\newcommand\met@summerheaderproblemsBonus{Zadání \Roman{batch}. části prázdninové série}
-\newcommand\met@headersolutions{Řešení \Roman{solvedbatch}. série}
-\newcommand\met@summerheadersolutions{Řešení \Roman{solvedbatch}. části prázdninové série}
-\newcommand\met@headerseries[1]{\met@seriestitle: #1}
-\newcommand\met@headerresults{Pořadí řešitelů po \Roman{solvedbatch}. sérii}
-\newcommand\met@summerheaderresults{Konečné pořadí řešitelů prázdninové série}
-\renewcommand\maketitle{}
-%pro potreby rocenky
-\newcommand\met@headeryeartoc{Obsah}
-\newcommand\met@headeryearintro{Předmluva}
-\newcommand\met@headeryeartheorproblems{Zadání teoretických úloh}
-\newcommand\met@headeryeartheorsolutions{Řešení teoretických úloh}
-\newcommand\met@headeryearexpproblems{Zadání experimentálních úloh}
-\newcommand\met@headeryearexpsolutions{Řešení experimentálních úloh}
-\newcommand\met@headeryearseries[1]{\met@seriestitle o #1}
-\newcommand\met@headeryearserieschaptername{Kapitola \arabic{serieschapter}}
-\newcommand\met@headeryearserieschapter[1]{\met@headeryearserieschaptername: #1}
-\newcommand\met@headeryearseriessolutionsbasic{Řešení úloh ze seriálu}%bez obrazku pro bookmark
-\newcommand\met@headeryearseriessolutions{\met@headeryearseriessolutionsbasic}
-\newcommand\met@headeryearresults{Pořadí nejlepších řešitelů}
-\newcommand\met@headeryearresultsall{Pořadí řešitelů}
-\newcommand\met@headeryearevents{Akce semináře}%FYKOSu || VYFUKu
-%authors page
-\newcommand\autor@serialu{}
-\newcommand\n@zevserialu{} % přiklad: "Seriál o astrofyzice"
+\RequirePackage{hyperref}
 
-\newcommand\autorserialu[1]{
-\renewcommand\autor@serialu{#1}
-}
-\newcommand\nazevserialu[1]{
-\renewcommand\n@zevserialu{#1}
+% ----------------------
+% Generic data getter
+% ----------------------
+
+\newcommand\fksMetaGet[1]{%
+	\expandafter\ifx\csname fksMeta@#1\endcsname\relax
+	\PackageWarning{fksmeta}{Undefined variable #1}
+	\else
+	\expandafter\csname fksMeta@#1\endcsname\fi
 }
 
-\newcommand\met@ownauthorspage{}
-\newcommand\ownauthorspage[1]{
-\renewcommand\met@ownauthorspage{#1}
-}
-
-\newcommand\met@authorspage{
-\met@ownauthorspage
-\bigskip
-}
-
-\newcommand\met@probthemeauthors{}
-
-% results table parameter
-\newcommand\met@probheader{1 & 2 & 3 & 4 & 5 & P & E & S} % results table problems header
-\newcommand\met@resultscols{\newcolumntype{T}{x{\bfseries}rA{\itshape}p{0.22\textwidth}^X% order, name, school
-^r^r^r^r^r^r^r^r%points columns
-@{\hspace{8pt}}A{\bfseries}r@{\hspace{3pt}}A{\itshape}r@{\hspace{3pt}}A{\itshape}r@{\hspace{6pt}}A{\bfseries}r}} % batch, percent, percent total, sum
-
-\newcommand\met@resultsheader{& {\normalfont\bfseries jméno} & škola & %
-\met@probheader & %
-\Roman{solvedbatch} & \textnormal{\uv{\%}\hglue -0.5em} & \textnormal{\%} & $\Sigma$ \\}
-
-% language selector
-\newif\iffksczech
-\fksczechfalse
-\newif\iffksslovak
-\fksslovakfalse
-\newif\iffksenglish
-\fksenglishfalse
-\newif\iffkslang
-\fkslangfalse
-
-% set default language czech
-\DeclareOption{czech}{\fksczechtrue\fkslangtrue}
-\DeclareOption{slovak}{\fksslovaktrue\fkslangtrue}
-\DeclareOption{english}{\fksenglishtrue\fkslangtrue}
-\iffkslang\else%
-\fksczechtrue%
-\PackageWarning{fksmeta}{No language passed, Czech selected.}
-\fi
-
-
-% FYKOS
-\DeclareOption{fykos}{%
-\renewcommand\met@headername{FYKOS}
-\renewcommand\met@shortname{FYKOS}
-\renewcommand\met@webdomain{fykos.cz}
-\renewcommand\met@seriestitle{Seriál}
-\renewcommand\met@volumeid{ročník \metayear{year}\qquad číslo \arabic{batch}/7}
-\renewcommand\met@headerproblems{\centering \includegraphics{logo1.eps}\hspace{10pt}\raisebox{0.6cm}{Zadání \Roman{batch}. série}\vglue 1pt}
-\renewcommand\met@headersolutions{\centering \includegraphics{logo2.eps}\hspace{10pt}\raisebox{0.6cm}{Řešení \Roman{solvedbatch}. série}}
-\renewcommand\met@headerseries[1]{\centering \includegraphics{logo3.eps}\hspace{10pt}\raisebox{0.6cm}{\met@seriestitle: #1}}
-\renewcommand\met@headerresults{\centering \includegraphics{logo1.eps}\hspace{10pt}\raisebox{0.6cm}{Pořadí řešitelů po \Roman{solvedbatch}. sérii}}
-%pro potreby rocenky
-\renewcommand\met@headeryeartoc{\centering \includegraphics{logo1.eps}\hspace{10pt}\raisebox{0.6cm}{Obsah}}
-\renewcommand\met@headeryearintro{\centering \includegraphics{logo3.eps}\hspace{10pt}\raisebox{0.6cm}{Předmluva}}
-\renewcommand\met@headeryeartheorproblems{\centering \includegraphics{logo1.eps}\hspace{10pt}\raisebox{0.6cm}{Zadání teoretických úloh}}
-\renewcommand\met@headeryeartheorsolutions{\centering \includegraphics{logo2.eps}\hspace{10pt}\raisebox{0.6cm}{Řešení teoretických úloh}}
-\renewcommand\met@headeryearexpproblems{\centering \includegraphics{logo1.eps}\hspace{10pt}\raisebox{0.6cm}{Zadání experimentálních úloh}}
-\renewcommand\met@headeryearexpsolutions{\centering \includegraphics{logo4.eps}\hspace{10pt}\raisebox{0.6cm}{Řešení experimentálních úloh}}
-\renewcommand\met@headeryearseries[1]{\centering \includegraphics{logo3.eps}\hspace{10pt}\raisebox{0.6cm}{#1}}
-\renewcommand\met@headeryearserieschapter[1]{\met@headeryearserieschaptername: #1}
-\renewcommand\met@headeryearseriessolutionsbasic{Řešení úloh ze seriálu}%bez obrazku pro bookmark
-\renewcommand\met@headeryearseriessolutions{\centering \includegraphics{logo3.eps}\hspace{10pt}\raisebox{0.6cm}{\met@headeryearseriessolutionsbasic}}
-\renewcommand\met@headeryearresults{\centering \includegraphics{logo7.eps}\hspace{10pt}\raisebox{0.6cm}{Pořadí nejlepších řešitelů}}
-\renewcommand\met@headeryearresultsall{\centering
-\includegraphics{logo7.eps}\hspace{10pt}\raisebox{0.6cm}{Pořadí řešitelů}}
-\renewcommand\met@headeryearevents{\centering
-\includegraphics{logo6.eps}\hspace{10pt}\raisebox{0.6cm}{Akce FYKOSu}}
-
-%authors page
-\newcommand\podzimni@soustredeni{} % legenda
-\newcommand\jarni@soustredeni{} % legenda
-
-\newcommand\podzimnisoustredeni[1]{
-\renewcommand\podzimni@soustredeni{#1}
-}
-\newcommand\jarnisoustredeni[1]{
-\renewcommand\jarni@soustredeni{#1}
-}
-
-\renewcommand\met@authorspage{
-\textit{\n@zevserialu:} \autor@serialu\par
-\textit{Legenda podzimního soustředění:} \podzimni@soustredeni\par
-\textit{Legenda jarního soustředění:} \jarni@soustredeni\par
-\met@ownauthorspage
-\bigskip
-}
-\renewcommand\met@probthemeauthors{
-\textit{Náměty úloh:}\par
-\hspace{\tmpp@rindent}
-\begin{minipage}{\dimexpr\textwidth-\tmpp@rindent-3pt\relax} %3pt is magic
-\input{authors/probauthors}
-\end{minipage}\par
-}
-
-% to have initialized counters
-\AtBeginDocument{
-\hypersetup{
-    pdftitle=\ifyearbook{Ročenka FYKOSu, \Roman{year}. ročník}\else{FYKOS, \Roman{year}. ročník, \arabic{batch}. číslo}\fi,    % title
-    pdfauthor={Organizátoři FYKOSu <fykos@\met@webdomain>},     % author
-    pdfsubject={Fyzikální korespondenční seminář MFF UK},   % subject of the document
-}}
-
-\iffksczech
-\renewcommand\met@licence{%
-Fyzikální korespondenční seminář je organizován studenty MFF~UK.
-Je zastřešen Oddělením propagace a mediální komunikace MFF~UK
-a~podporován Ústavem teoretické fyziky\\
-MFF~UK, jeho zaměstnanci a~Jednotou českých matematiků a~fyziků.
-Realizace projektu byla podpořena Ministerstvem školství, mládeže
-a~tělovýchovy.
-\nopagebreak\medskip
-
-\footnotesize Toto dílo je šířeno pod licencí Creative Commons
-Attribution-Share Alike 3.0 Unported.\\
-Pro zobrazení kopie této licence navštivte
-\url{https://creativecommons.org/licenses/by-sa/3.0/}.\par
-}
-
-\renewcommand\met@address{%
-\begin{tabular}{r>{\slshape\bfseries}l}
-  \multirow{5}{*}{\includegraphics{logo1.eps}} & \FYKOS \\
-  & UK, Matematicko-fyzikální fakulta\\
-  & Ústav teoretické fyziky\\
-  & V Holešovičkách 2\\
-  & 180\,00 Praha 8\\
-\noalign{\smallskip}
-  www: & \normalfont\url{https://\met@webdomain}\\
-  e-mail: & \normalfont\mail{fykos@\met@webdomain}\\
-\end{tabular}\ifyearbook\relax\else
-\nopagebreak\smallskip
-
-{
-	\raisebox{-0.2\baselineskip}{%
-		\opt{web}{\includegraphics[height=\baselineskip]{color/fb_logo.eps}}%
-		\opt{print}{\includegraphics[height=\baselineskip]{fb_logo.eps}}%
-	}~\href{https://www.facebook.com/FYKOS}{\bfseries\slshape /FYKOS} \quad
-	\raisebox{-0.2\baselineskip}{%
-		\opt{web}{\includegraphics[height=\baselineskip]{color/ig_logo.pdf}}%
-		\opt{print}{\includegraphics[height=\baselineskip]{ig_logo.pdf}}%
-	}\href{https://www.instagram.com/fykosak}{~\bfseries\slshape @fykosak} 
-} \fi
-
-}
-
-\fi%iffksczech
-\iffksenglish
-\renewcommand\met@seriestitle{Serial}
-\renewcommand\met@webdomain{fykos.org}
-\renewcommand\met@licence{%
-FYKOS is organized by students of Faculty of Mathematics and Physics of Charles University.
-It's part of Media Communications and PR Office
-and is supported by Institute of Theoretical Physics of MFF UK,
-his employees and The Union of Czech Mathematicians and Physicists.
-The realization of this project was supported by Ministry of Education, Youth
-and Sports.
-\nopagebreak\medskip
-
-\footnotesize This work is licensed under Creative Commons
-Attribution-Share Alike 3.0 Unported.\\
-To view a copy of the license, visit
-\url{https://creativecommons.org/licenses/by-sa/3.0/}.\par
-}
-
-\renewcommand\met@address{%
-\begin{tabular}{r>{\slshape\bfseries}l}
-      \multirow{5}{*}{\includegraphics{logo1.eps}} & \FYKOS \\
-      & Institute of Theoretical Physics\\
-      & Faculty of Mathematics and Physics, Charles University\\
-      & V Holešovičkách 2\\
-      & 180\,00 Praha 8\\
-      & Czech Republic\\
-    \noalign{\smallskip}
-      www: & \normalfont\url{https://\met@webdomain}\\
-      e-mail: & \normalfont\mail{fykos@\met@webdomain}\\
-\end{tabular}
-\nopagebreak\smallskip
-
-{
-	\raisebox{-0.2\baselineskip}{%
-		\opt{web}{\includegraphics[height=\baselineskip]{color/fb_logo.eps}}%
-		\opt{print}{\includegraphics[height=\baselineskip]{fb_logo.eps}}%
-	}~\href{https://www.facebook.com/FYKOS}{\bfseries\slshape /FYKOS} \quad
-	\raisebox{-0.2\baselineskip}{%
-		\opt{web}{\includegraphics[height=\baselineskip]{color/ig_logo.pdf}}%
-		\opt{print}{\includegraphics[height=\baselineskip]{ig_logo.pdf}}%
-	}\href{https://www.instagram.com/fykosak}{~\bfseries\slshape @fykosak} 
-}
-
-}
-
-\fi%iffksenglish
-}% end FYKOS
-
-
-% --- VÝFUK ---
-\DeclareOption{vyfuk}{%
-\newcommand\year@tag[1]{\ifcase #1 \or 1\or 2\or 3\or 4\or 5\or \ding{187}\or \ding{188}\or \ding{189}\or \ding{190}\else \@ctrerr\fi{} }
-\newcommand\type@tag[1]{%
-	\ifthenelse{\equal{#1}{hard}}{\ding{72}}{}%
-}
-
-\newif\ifsummerbatch
-\newcommand\@seriesname{NA}
-\newcommand\seriesname[1]{\renewcommand\@seriesname{#1}}
-\renewcommand\met@headername{Korespondenční seminář MFF UK pro základní školy}
-\renewcommand\met@shortname{Výfuk}
-\renewcommand\met@webdomain{vyfuk.mff.cuni.cz}
-\renewcommand\met@seriestitle{Výfučtení}
-\renewcommand\@metaprobletter[1]{\ifcase #1 \or 1\or 2\or 3\or 4\or 5\or E\or V\else \@ctrerr\fi}
-\renewcommand\metaprobdata[1]{%
-% Tags for study years (default are all)
-{\LARGE
-\ifthenelse{\equal{\@probstudyyears}{{N/A}}}{%
-\year@tag{6}%
-\year@tag{7}%
-\year@tag{8}%
-\year@tag{9}
-}{%
-\let\do\year@tag%
-\expandafter\docsvlist\@probstudyyears%
-}% end of study year tags
-% tags for problem type
-\ifthenelse{\equal{\@probtags}{{N/A}}}{}{%
-\let\do\type@tag%
-\expandafter\docsvlist\@probtags%
-} % end of problem type tags
-}}
-\renewcommand\metayear[1]{\ifthenelse{\equal{\value{#1}}{1}}{1\textpm1}{\Roman{#1}}}
-\renewcommand\met@volumeid{ročník \metayear{year}\ifsummerbatch{\qquad \@seriesname}\else{\qquad číslo \arabic{batch}/7}\fi}
-
-%zadania
-%  \renewcommand\met@headerproblems{\centering Zadání \Roman{batch}. série}
-\renewcommand\met@headerproblems{\centering
-	\includegraphics[width=23mm]{tabule2.eps}\hspace{20pt}\raisebox{0.6cm}
-	{Zadání \Roman{batch}. série}
-	\hspace{20pt}\includegraphics[width=23mm]{plazmaL.eps}
-}
-
-\renewcommand\met@summerheaderproblems{\centering
-	\includegraphics[width=23mm]{zmrzlina.eps}\hspace{20pt}\raisebox{0.6cm}
-	{Zadání \Roman{batch}. části prázdninové série}
-	\hspace{20pt}\includegraphics[width=23mm]{plazmaL.eps}
-}
-
-\renewcommand\met@summerheaderproblemsBonus{\centering
-	\includegraphics[width=23mm]{zmrzlina.eps}\hspace{20pt}\raisebox{0.6cm}
-	{Zadání bonusové prázdninové série}
-	\hspace{20pt}\includegraphics[width=23mm]{plazmaL.eps}
-}
-
-% řešení
-%  \renewcommand\met@headersolutions{\centering Řešení \Roman{solvedbatch}. série}
-\renewcommand\met@headersolutions{\centering
-	\includegraphics[width=23mm]{tabule.eps}\hspace{20pt}\raisebox{0.6cm}
-	{Řešení \Roman{solvedbatch}. série}
-	\hspace{20pt}\includegraphics[width=23mm]{zarovkaL.eps}
-}
-
-\renewcommand\met@summerheadersolutions{\centering
-	\includegraphics[width=23mm]{zmrzlina.eps}\hspace{20pt}\raisebox{0.6cm}
-	{Řešení \Roman{solvedbatch}. části prázdninové série}
-	\hspace{20pt}\includegraphics[width=23mm]{zarovkaL.eps}
-}
-% Vyfučtení
-%  \renewcommand\met@headerseries[1]{\centering Výfučtení: #1}
-\renewcommand\met@headerseries[1]{\centering
-	\includegraphics[width=23mm]{kniha.eps}\hspace{20pt}\raisebox{0.6cm}
-	{\met@seriestitle: #1}
-}
-% Autoři Výfučtení
-% \serauthors[1] macro is empty operation for TeX, its only purpose at the moment is to play
-% a role of searchable thing for grep in creating of a yearbook (yearbook/scripts/serauthors.sh).
-\newcommand\autori@vyfucteni{}
-\newcommand\serauthors[1]{
-	\renewcommand\autori@vyfucteni{#1}
-}
-% poradie
-% \renewcommand\met@headerresults{\centering Pořadí řešitelů po \Roman{solvedbatch}. sérii}
-\renewcommand\met@headerresults{\centering
-	\includegraphics[width=23mm]{stupne123.eps}\hspace{20pt}\raisebox{0.6cm}
-	{Pořadí řešitelů po \Roman{solvedbatch}. sérii}
-%\hspace{20pt}\includegraphics[width=23mm]{zmrzlina.eps}
-}
-\renewcommand\met@summerheaderresults{\centering
-	\includegraphics[width=23mm]{stupne123.eps}\hspace{20pt}\raisebox{0.6cm}
-	{Konečné pořadí řešitelů prázdninové série}
-%\hspace{20pt}\includegraphics[width=23mm]{zmrzlina.eps}
-}
-
-\renewcommand\met@headeryeartoc{\centering \includegraphics[scale=0.5]{vyfuk_vyfuk.eps}\hspace{10pt}\raisebox{0.6cm}{Obsah}}
-\renewcommand\met@headeryearintro{\centering \includegraphics[scale=0.5]{vyfuk_vyfuk.eps}\hspace{10pt}\raisebox{0.6cm}{Předmluva}}
-\renewcommand\met@headeryeartheorproblems{\centering \includegraphics[scale=0.35]{vyfuk_rovnice-pretahovani.eps}\hspace{10pt}\raisebox{0.3cm}{Zadání teoretických úloh}}
-\renewcommand\met@headeryeartheorsolutions{\centering \includegraphics[scale=0.35]{vyfuk_rovnice-pretahovani.eps}\hspace{10pt}\raisebox{0.3cm}{Řešení teoretických úloh}}
-\renewcommand\met@headeryearexpproblems{\centering \includegraphics[scale=0.16]{vyfuk_raketa.eps}\hspace{10pt}\raisebox{0.6cm}{Zadání experimentálních úloh}}
-\renewcommand\met@headeryearexpsolutions{\centering \includegraphics[scale=0.16]{vyfuk_raketa.eps}\hspace{10pt}\raisebox{0.6cm}{Řešení experimentálních úloh}}
-\renewcommand\met@headeryearseries[1]{\centering \includegraphics[scale=0.07]{vyfuk_kvetinac.pdf}\hspace{10pt}\raisebox{0.6cm}{\met@seriestitle}} %parametr z duvodu genericity
-\renewcommand\met@headeryearserieschaptername{\arabic{serieschapter}. \met@seriestitle}
-\renewcommand\met@headeryearserieschapter[1]{\met@headeryearserieschaptername: #1}
-\renewcommand\met@headeryearseriessolutionsbasic{Řešení úloh z Výfučtení}%bez obrazku pro bookmark
-\renewcommand\met@headeryearseriessolutions{\centering \includegraphics[scale=0.07]{vyfuk_kvetinac.pdf}\hspace{10pt}\raisebox{0.6cm}{\met@headeryearseriessolutionsbasic}}
-\renewcommand\met@headeryearresults{\centering \includegraphics[scale=0.5]{vyfuk_vyfuk.eps}\hspace{10pt}\raisebox{0.6cm}{Pořadí nejlepších řešitelů}}
-\renewcommand\met@headeryearresultsall{\centering \includegraphics[scale=0.5]{vyfuk_vyfuk.eps}\hspace{10pt}\raisebox{0.6cm}{Pořadí řešitelů}}
-\renewcommand\met@headeryearevents{\centering \includegraphics[scale=0.4]{vyfuk-schlitt.eps}\hspace{10pt}\raisebox{0.6cm}{Akce Výfuku}}
-\newcommand\met@headersummer{\centering \includegraphics[width=23mm]{zmrzlina.eps}\hspace{10pt}\raisebox{0.6cm}{Zadání úloh prázdninové série}}
-\newcommand\met@headersummersolutions{\centering \includegraphics[width=23mm]{zmrzlina.eps}\hspace{10pt}\raisebox{0.6cm}{Řešení úloh prázdninové série}}
-
-%authors page
-\newcommand\t@bor{}
-\newcommand\tabor[1]{
-\renewcommand\t@bor{#1}
-}
-
-\renewcommand\met@authorspage{
-	\textit{Autoři Výfučtení:}\par
-	\hspace{\tmpp@rindent}
-	\begin{minipage}{\dimexpr\textwidth-\tmpp@rindent-3pt\relax} % 3pt is magic
-	\input{authors/serauthors}
-	\end{minipage}\par
-	%
-	\textit{Legenda tábora:} \t@bor\par
-	\met@ownauthorspage
-	\bigskip
-}
-
-
-\fancypagestyle{titlepage}{
-	\newgeometry{head=0pt,headsep=0pt,margin=0.7cm,includeheadfoot}
-	\renewcommand{\headrulewidth}{0pt}
-	\lhead{}
-	\chead{}
-	\rhead{}
-	\cfoot{\includegraphics[height=43pt]{matfyz_nove_logo.eps}}
-}
-\renewcommand\maketitle{%
-	\thispagestyle{titlepage}{%
-		\setlength{\parindent}{0pt}
-		\colorbox{black}{
-		\begin{minipage}{\textwidth-6pt}
-			\textcolor{white}{\raisebox{-8.5pt}{\bfseries\sffamily \met@headername{}}
-			\hfill \raisebox{-8.5pt}{\bfseries\sffamily \met@volumeid~}}
-		\end{minipage}}
-	}%
-
-	\vspace{-\parskip}\vspace{5mm}
-	{\centering\includegraphics[width=\textwidth]{vyfuk_hlavicka.eps}}%
-	\vspace{8mm}
-}
-
-% Since yearbook defines its own header and code below in else branch overwrites
-% such a behaviour, we need to exclude it within ifyearbook.
-\ifyearbook
-	%
-\else
-	% Layout settings brought from fksbase.cls, redefining headers.
-	\fancyhead{} % To get rid of fksbaseheader, cleaning it up.
-	\pagestyle{fancy} % New definition of header starts here.
-	\renewcommand{\headrulewidth}{0pt}
-	\chead{\setlength{\parindent}{0pt}
-		\colorbox{black}{
-			\begin{minipage}{\textwidth-6pt}
-				\textcolor{white}{\raisebox{-8.5pt}{\bfseries\sffamily \met@headername{}}
-				\hfill \raisebox{-8.5pt}{\bfseries\sffamily \met@volumeid~}}
-			\end{minipage}
-		}
-	}
-	\setlength{\headsep}{5mm}
-\fi
-
-\renewcommand\met@address{%
-\begin{tabular}{r>{\slshape\bfseries}l}
-	\multirow{5}{*}{\includegraphics[width=2cm]{NB.eps}}
-	& Korespondenční seminář \VYFUK \\
-	& UK, Matematicko-fyzikální fakulta\\
-	& V Holešovičkách 2\\
-	& 180\,00 Praha 8\\
-	\noalign{\smallskip}
-	www: & \normalfont\url{https://\met@webdomain}\\
-	e-mail: & \normalfont\mail{vyfuk@\met@webdomain}\\
-\end{tabular}
-\nopagebreak\smallskip
-
-{\sffamily
-	\raisebox{-0.2\baselineskip}{%
-		\opt{web}{\includegraphics[height=\baselineskip]{color/fb_logo.eps}}%
-		\opt{print}{\includegraphics[height=\baselineskip]{fb_logo.eps}}%
-	}~\href{https://www.facebook.com/ksvyfuk}{\bfseries\slshape /ksvyfuk} \quad
-	\raisebox{-0.2\baselineskip}{%
-		\opt{web}{\includegraphics[height=\baselineskip]{color/ig_logo.pdf}}%
-		\opt{print}{\includegraphics[height=\baselineskip]{ig_logo.pdf}}%
-	}~\href{https://www.instagram.com/ksvyfuk}{\bfseries\slshape @ksvyfuk}
-}
-
-}
- 
-\renewcommand\met@licence{
-Korespondenční seminář Výfuk je organizován studenty a přáteli MFF~UK.
-Je zastřešen Oddělením propagace a~mediální komunikace MFF~UK
-a~podporován Katedrou didaktiky fyziky
-MFF~UK, jejími zaměstnanci a~Jednotou českých matematiků a~fyziků.
-Realizace projektu byla podpořena Ministerstvem školství, mládeže
-a~tělovýchovy.
-\nopagebreak\medskip
-
-\footnotesize Toto dílo je šířeno pod licencí Creative Commons
-Attribution-Share Alike 3.0 Unported.\\
-Pro zobrazení kopie této licence navštivte
-\url{https://creativecommons.org/licenses/by-sa/3.0/}.\par
-}
-
-% results table parameter
-\renewcommand\met@probheader{1 & 2 & 3 & 4 & 5 & E & V} % results table problems header
-\renewcommand\met@resultscols{\newcolumntype{T}{x{\bfseries}rA{\itshape}p{0.22\textwidth}^X% order, name, school
-^r^r^r^r^r^r^r%points columns
-@{\hspace{12pt}}A{\bfseries}r@{\hspace{8pt}}A{\bfseries}r}} % batch sum, sum
-
-\renewcommand\met@resultsheader{& {\normalfont\bfseries jméno} & škola & %
-\met@probheader & %
-\Roman{solvedbatch} & $\Sigma$ \\}
-
-
-
-% to have initialized counters
-\AtBeginDocument{
-\ifyearbook
-\nazevserialu{Výfučtení} %pro zachovani genericity maker (ovlivnuje vysazeni nazvu bookmarku)
-\renewcommand\met@licence{
-	\footnotesize
-	Korespondenční seminář Výfuk je organizován studenty a přáteli MFF~UK.
-	Je zastřešen Oddělením propagace a~mediální komunikace MFF~UK
-	a~podporován Katedrou didaktiky fyziky
-	MFF~UK, jejími zaměstnanci a~Jednotou českých matematiků a~fyziků.
-	\par
-}
-\renewcommand\maketitle{%
-	\thispagestyle{empty}
+\newcommand\makeaddress{
 	\begin{center}
-		\null\vspace{12pt}
-		
-		{\titlefontsc\@authors}
-		\vspace{36pt}
-		
-		{\titlefontmain\@title}
-		\vspace{36pt}
-		
-		{\titlefontsub\@subtitle}
-		\vspace{72pt}
-		
-		% Feel free to use different logo each year. Already used:
-		% vyfuk6 -- vyfuk_logo2
-		\includegraphics[width=60mm]{vyfuk_logo2}
+		\fksMeta@address
 	\end{center}
 }
-\renewcommand\met@probthemeauthors{}
-\fi
-\hypersetup{
-	pdftitle=\ifyearbook{Ročenka Výfuku, \Roman{year}. ročník}\else{Výfuk, \Roman{year}. ročník, \arabic{batch}. číslo}\fi,    % tady radši Roman
-	pdfauthor={Organizátoři Výfuku <vyfuk@\met@webdomain>},     % author
-	pdfsubject={Fyzikální korespondenční seminář MFF UK pro ZŠ},   % subject of the document
-}}} % end VÝFUK
 
+\newcommand\makelicence{
+	\begin{center}
+		\fksMeta@licence
+	\end{center}
+}
 
+% useful macro used for emails
+\newcommand\mail[1]{\href{mailto:#1}{\nolinkurl{#1}}}
 
+% ----------------------
+% Command initialization
+% ----------------------
 
-\ProcessOptions\relax
+% init maketitle
+\renewcommand\maketitle{}
+
+% generic contest variables
+\newcommand\fksMeta@contestNameFull{Name displayed in the header}
+\newcommand\fksMeta@contestNameShort{Short name of the contest}
+\newcommand\fksMeta@webDomain{Web and mail domain}
+\newcommand\fksMeta@serialTitle{Title name used for series}
+\newcommand\fksMeta@problemSolutionTitle{Title name used for solutions}
+\newcommand\fksMeta@formatContestYear[1]{\Roman{#1}}
+
+% text used in headers
+\newcommand\fksMeta@headerLeft{}
+\newcommand\fksMeta@headerRight{}
+
+% external redefinition of headers
+\newcommand\leftheader[1]{
+	\renewcommand\fksMeta@headerLeft{#1}}
+\newcommand\rightheader[1]{
+	\renewcommand\fksMeta@headerRight{#1}}
+
+% legal and contact information
+\newcommand\fksMeta@address{Contact address}
+\newcommand\fksMeta@licence{Licence}
+
+% data used by problems
+\newcommand\fksMeta@problemDefaultStudyYears{}
+\newcommand\fksMeta@problemLetter[1]{%
+	\ifcase #1%
+		\relax\or%
+		1\else%
+		\@ctrerr%
+	\fi%
+}
+
+% create counter for tracting the year, batch and solvedbatch number
+\newcounter{year}
+\newcounter{batch}[year]
+\newcounter{solvedbatch}
+
+% results table parameter
+\RequirePackage{array} % provide newcolumntype macro
+\newcommand\fksMeta@tableColumnsResults{} % column definitions for name, school, points, sum etc.
+\newcommand\fksMeta@tableHeaderResultsTasks{} % table header for task points
+\newcommand\fksMeta@tableHeaderResults{} % table header
+
+% Load config files
+\RequirePackage{fksconf}
+\fksConf@register{fksmeta}
+\fksConf@loadConfig{fksmeta}

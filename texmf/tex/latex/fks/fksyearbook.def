@@ -1,0 +1,166 @@
+%TODO cleanup
+
+%pro potreby rocenky
+\newcommand\met@headeryeartoc{Obsah}
+\newcommand\met@headeryearintro{Předmluva}
+\newcommand\met@headeryeartheorproblems{Zadání teoretických úloh}
+\newcommand\met@headeryeartheorsolutions{Řešení teoretických úloh}
+\newcommand\met@headeryearexpproblems{Zadání experimentálních úloh}
+\newcommand\met@headeryearexpsolutions{Řešení experimentálních úloh}
+\newcommand\met@headeryearseries[1]{\met@seriestitle o #1}
+\newcommand\met@headeryearserieschaptername{Kapitola \arabic{serieschapter}}
+\newcommand\met@headeryearserieschapter[1]{\met@headeryearserieschaptername: #1}
+\newcommand\met@headeryearseriessolutionsbasic{Řešení úloh ze seriálu}%bez obrazku pro bookmark
+\newcommand\met@headeryearseriessolutions{\met@headeryearseriessolutionsbasic}
+\newcommand\met@headeryearresults{Pořadí nejlepších řešitelů}
+\newcommand\met@headeryearresultsall{Pořadí řešitelů}
+\newcommand\met@headeryearevents{Akce semináře}%FYKOSu || VYFUKu
+
+%authors page
+\newcommand\autor@serialu{}
+\newcommand\n@zevserialu{} % přiklad: "Seriál o astrofyzice"
+
+\newcommand\autorserialu[1]{
+\renewcommand\autor@serialu{#1}
+}
+\newcommand\nazevserialu[1]{
+\renewcommand\n@zevserialu{#1}
+}
+
+\newcommand\met@ownauthorspage{}
+\newcommand\ownauthorspage[1]{
+\renewcommand\met@ownauthorspage{#1}
+}
+
+\newcommand\met@authorspage{
+\met@ownauthorspage
+\bigskip
+}
+
+\newcommand\met@probthemeauthors{}
+
+% --- FYKOS ---
+%pro potreby rocenky
+\renewcommand\met@headeryeartoc{\centering \includegraphics{logo1.eps}\hspace{10pt}\raisebox{0.6cm}{Obsah}}
+\renewcommand\met@headeryearintro{\centering \includegraphics{logo3.eps}\hspace{10pt}\raisebox{0.6cm}{Předmluva}}
+\renewcommand\met@headeryeartheorproblems{\centering \includegraphics{logo1.eps}\hspace{10pt}\raisebox{0.6cm}{Zadání teoretických úloh}}
+\renewcommand\met@headeryeartheorsolutions{\centering \includegraphics{logo2.eps}\hspace{10pt}\raisebox{0.6cm}{Řešení teoretických úloh}}
+\renewcommand\met@headeryearexpproblems{\centering \includegraphics{logo1.eps}\hspace{10pt}\raisebox{0.6cm}{Zadání experimentálních úloh}}
+\renewcommand\met@headeryearexpsolutions{\centering \includegraphics{logo4.eps}\hspace{10pt}\raisebox{0.6cm}{Řešení experimentálních úloh}}
+\renewcommand\met@headeryearseries[1]{\centering \includegraphics{logo3.eps}\hspace{10pt}\raisebox{0.6cm}{#1}}
+\renewcommand\met@headeryearserieschapter[1]{\met@headeryearserieschaptername: #1}
+\renewcommand\met@headeryearseriessolutionsbasic{Řešení úloh ze seriálu}%bez obrazku pro bookmark
+\renewcommand\met@headeryearseriessolutions{\centering \includegraphics{logo3.eps}\hspace{10pt}\raisebox{0.6cm}{\met@headeryearseriessolutionsbasic}}
+\renewcommand\met@headeryearresults{\centering \includegraphics{logo7.eps}\hspace{10pt}\raisebox{0.6cm}{Pořadí nejlepších řešitelů}}
+\renewcommand\met@headeryearresultsall{\centering
+\includegraphics{logo7.eps}\hspace{10pt}\raisebox{0.6cm}{Pořadí řešitelů}}
+\renewcommand\met@headeryearevents{\centering
+\includegraphics{logo6.eps}\hspace{10pt}\raisebox{0.6cm}{Akce FYKOSu}}
+
+%authors page
+\newcommand\podzimni@soustredeni{} % legenda
+\newcommand\jarni@soustredeni{} % legenda
+
+\newcommand\podzimnisoustredeni[1]{
+\renewcommand\podzimni@soustredeni{#1}
+}
+\newcommand\jarnisoustredeni[1]{
+\renewcommand\jarni@soustredeni{#1}
+}
+
+\renewcommand\met@authorspage{
+\textit{\n@zevserialu:} \autor@serialu\par
+\textit{Legenda podzimního soustředění:} \podzimni@soustredeni\par
+\textit{Legenda jarního soustředění:} \jarni@soustredeni\par
+\met@ownauthorspage
+\bigskip
+}
+\renewcommand\met@probthemeauthors{
+\textit{Náměty úloh:}\par
+\hspace{\tmpp@rindent}
+\begin{minipage}{\dimexpr\textwidth-\tmpp@rindent-3pt\relax} %3pt is magic
+\input{authors/probauthors}
+\end{minipage}\par
+}
+
+% to have initialized counters
+\AtBeginDocument{
+\hypersetup{
+    pdftitle=\ifyearbook{Ročenka FYKOSu, \Roman{year}. ročník}\else{FYKOS, \Roman{year}. ročník, \arabic{batch}. číslo}\fi,    % title
+    pdfauthor={Organizátoři FYKOSu <fykos@\met@webdomain>},     % author
+    pdfsubject={Fyzikální korespondenční seminář MFF UK},   % subject of the document
+}}
+
+% --- Výfuk ---
+
+
+\renewcommand\met@headeryeartoc{\centering \includegraphics[scale=0.5]{vyfuk_vyfuk.eps}\hspace{10pt}\raisebox{0.6cm}{Obsah}}
+\renewcommand\met@headeryearintro{\centering \includegraphics[scale=0.5]{vyfuk_vyfuk.eps}\hspace{10pt}\raisebox{0.6cm}{Předmluva}}
+\renewcommand\met@headeryeartheorproblems{\centering \includegraphics[scale=0.35]{vyfuk_rovnice-pretahovani.eps}\hspace{10pt}\raisebox{0.3cm}{Zadání teoretických úloh}}
+\renewcommand\met@headeryeartheorsolutions{\centering \includegraphics[scale=0.35]{vyfuk_rovnice-pretahovani.eps}\hspace{10pt}\raisebox{0.3cm}{Řešení teoretických úloh}}
+\renewcommand\met@headeryearexpproblems{\centering \includegraphics[scale=0.16]{vyfuk_raketa.eps}\hspace{10pt}\raisebox{0.6cm}{Zadání experimentálních úloh}}
+\renewcommand\met@headeryearexpsolutions{\centering \includegraphics[scale=0.16]{vyfuk_raketa.eps}\hspace{10pt}\raisebox{0.6cm}{Řešení experimentálních úloh}}
+\renewcommand\met@headeryearseries[1]{\centering \includegraphics[scale=0.07]{vyfuk_kvetinac.pdf}\hspace{10pt}\raisebox{0.6cm}{\met@seriestitle}} %parametr z duvodu genericity
+\renewcommand\met@headeryearserieschaptername{\arabic{serieschapter}. \met@seriestitle}
+\renewcommand\met@headeryearserieschapter[1]{\met@headeryearserieschaptername: #1}
+\renewcommand\met@headeryearseriessolutionsbasic{Řešení úloh z Výfučtení}%bez obrazku pro bookmark
+\renewcommand\met@headeryearseriessolutions{\centering \includegraphics[scale=0.07]{vyfuk_kvetinac.pdf}\hspace{10pt}\raisebox{0.6cm}{\met@headeryearseriessolutionsbasic}}
+\renewcommand\met@headeryearresults{\centering \includegraphics[scale=0.5]{vyfuk_vyfuk.eps}\hspace{10pt}\raisebox{0.6cm}{Pořadí nejlepších řešitelů}}
+\renewcommand\met@headeryearresultsall{\centering \includegraphics[scale=0.5]{vyfuk_vyfuk.eps}\hspace{10pt}\raisebox{0.6cm}{Pořadí řešitelů}}
+\renewcommand\met@headeryearevents{\centering \includegraphics[scale=0.4]{vyfuk-schlitt.eps}\hspace{10pt}\raisebox{0.6cm}{Akce Výfuku}}
+\newcommand\met@headersummer{\centering \includegraphics[width=23mm]{zmrzlina.eps}\hspace{10pt}\raisebox{0.6cm}{Zadání úloh prázdninové série}}
+\newcommand\met@headersummersolutions{\centering \includegraphics[width=23mm]{zmrzlina.eps}\hspace{10pt}\raisebox{0.6cm}{Řešení úloh prázdninové série}}
+
+%authors page
+\newcommand\t@bor{}
+\newcommand\tabor[1]{
+\renewcommand\t@bor{#1}
+}
+
+\renewcommand\met@authorspage{
+	\textit{Autoři Výfučtení:}\par
+	\hspace{\tmpp@rindent}
+	\begin{minipage}{\dimexpr\textwidth-\tmpp@rindent-3pt\relax} % 3pt is magic
+	\input{authors/serauthors}
+	\end{minipage}\par
+	%
+	\textit{Legenda tábora:} \t@bor\par
+	\met@ownauthorspage
+	\bigskip
+}
+
+\nazevserialu{Výfučtení} %pro zachovani genericity maker (ovlivnuje vysazeni nazvu bookmarku)
+\renewcommand\met@licence{
+	\footnotesize
+	Korespondenční seminář Výfuk je organizován studenty a přáteli MFF~UK.
+	Je zastřešen Oddělením propagace a~mediální komunikace MFF~UK
+	a~podporován Katedrou didaktiky fyziky
+	MFF~UK, jejími zaměstnanci a~Jednotou českých matematiků a~fyziků.
+	\par
+}
+\renewcommand\maketitle{%
+	\thispagestyle{empty}
+	\begin{center}
+		\null\vspace{12pt}
+		
+		{\titlefontsc\@authors}
+		\vspace{36pt}
+		
+		{\titlefontmain\@title}
+		\vspace{36pt}
+		
+		{\titlefontsub\@subtitle}
+		\vspace{72pt}
+		
+		% Feel free to use different logo each year. Already used:
+		% vyfuk6 -- vyfuk_logo2
+		\includegraphics[width=60mm]{vyfuk_logo2}
+	\end{center}
+}
+\renewcommand\met@probthemeauthors{}
+
+\hypersetup{
+	pdftitle=\ifyearbook{Ročenka Výfuku, \Roman{year}. ročník}\else{Výfuk, \Roman{year}. ročník, \arabic{batch}. číslo}\fi,    % tady radši Roman
+	pdfauthor={Organizátoři Výfuku <vyfuk@\met@webdomain>},     % author
+	pdfsubject={Fyzikální korespondenční seminář MFF UK pro ZŠ},   % subject of the document
+}

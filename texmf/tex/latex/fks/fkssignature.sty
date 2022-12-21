@@ -1,0 +1,88 @@
+%
+% @author Michal Koutný <michal@fykos.cz>
+%
+% @description Manipulation with signature "database".
+%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fkssignature}[2022/11/11 Signatures of authors]
+
+\RequirePackage{etoolbox}
+\RequirePackage{fksmeta}
+
+% create new signature
+\newcommand\newsignature[3]{%
+	\expandafter\gdef\csname fksSig@name#1\endcsname{%
+		#2%
+	}%
+	\expandafter\gdef\csname fksSig@mail#1\endcsname{%
+		#3%
+	}%
+}
+
+% getters for signature name and mail
+\newcommand\signame[1]{%
+	\expandafter\ifx\csname fksSig@name#1\endcsname\relax%
+		\PackageWarning{fkssignature}{Undefined name #1}%
+	\else%
+		\expandafter\csname fksSig@name#1\endcsname%
+	\fi%
+}
+\newcommand\sigmail[1]{%
+	\expandafter\ifx\csname fksSig@mail#1\endcsname\@empty%
+		\PackageWarning{fkssignature}{Undefined mail for name #1}%
+	\else%
+		\expandafter\csname fksSig@mail#1\endcsname @\fksMeta@webDomain%
+	\fi%
+}
+
+% raw signature output on one line
+\newcommand\fksSig@signatureRaw[1]{%
+	\signame{#1} <\sigmail{#1}>, %
+}
+
+\newcommand*{\signatureraw}[1]{%
+	\let\do\fksSig@signatureRaw
+	{\expandafter\docsvlist\expandafter{#1}}
+}
+
+% styled signature
+% can be changed in config file
+\newcommand*{\sign}[3][]{%
+	\ifthenelse{\equal{#1}{nofill}}{}{\hfill}%
+	\hspace{10pt}
+	\begin{tabular}{c}
+		\sigstyle{#2}\\
+		\mail{#3}
+	\end{tabular}
+}
+
+\newcommand*{\fksSig@signature}[1]{%
+	\sign{\signame{#1}}{\sigmail{#1}}%
+}
+
+\newcommand*{\signature}[1]{%
+	\let\do\fksSig@signature
+	\hfill\expandafter\docsvlist\expandafter{#1}
+}
+
+% signature style
+% can be changed in config
+\newcommand\sigstyle[1]{{\bfseries\itshape#1}}
+
+% Load file containing signature definitions
+\newcommand\fksSig@signatureFile{signatures.tex}
+\newcommand\signaturefile[1]{\renewcommand\fksSig@signatureFile{#1}}
+
+\AtBeginDocument{%
+	\IfFileExists{\fksSig@signatureFile}{%
+		\input{\fksSig@signatureFile}%
+	}{%
+		\ClassWarning{fkssignature}{Missing signature file \fksSig@signatureFile}%
+	}%
+}%
+
+% load config files
+\RequirePackage{fksconf}
+\fksConf@register{fkssignature}
+\fksConf@loadConfig{fkssignature}

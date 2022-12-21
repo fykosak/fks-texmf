@@ -1,0 +1,280 @@
+%
+% @author Michal Koutný <michal@fykos.cz>
+%
+% @description Auxiliary macros for reading problems database
+%              and formatting its output.
+%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fksproblems}[2022/11/18 Functions for problems tasks and solutions]
+
+\RequirePackage{ifthen}
+\RequirePackage{fksfigures}
+\RequirePackage{fkslang}
+\RequirePackage{fksmeta} % studyyears and problem letters
+\RequirePackage{fkssignature} % signature under solution
+\RequirePackage{pifont} % dings
+
+% ----------------
+% Loading problems
+% ----------------
+
+% store problem number
+\newcounter{problem}[batch]
+
+% define problems input folder
+\newcommand\fksProb@inputDir{.}
+\newcommand\problemsdir[1]{\renewcommand\fksProb@inputDir{#1}}
+
+% add graphics problems dir to path
+\addgraphicsdir{\fksProb@inputDir/graphics/}
+
+% possibility to override standard filename (for inter-year import)
+\newcommand\fksProb@filePrefix{problem}
+
+\newcommand\fksProb@tmpFilename{}
+\newcommand\fksProb@loadProblem[3]{ % batch number, problem number, expansion code
+	\renewcommand\fksProb@tmpFilename{\fksProb@inputDir/\fksProb@filePrefix#1-#2.tex}%
+	% reset optional parameters
+	\probbatch{N/A}\probno{N/A}\probpoints{N/A}\probsolauthors{N/A}%
+	\probauthors{N/A}\probsolvers{N/A}\probavg{N/A}\probtags{N/A}%
+	\probsource{N/A}\proborigintruth{N/A}\probtopics{N/A}%
+	\probexpectedprecision{N/A}\probmachineresult{N/A}\probstudyyears{N/A}%
+	\probname[\langCode]{N/A}\probdbname[\langCode]{N/A}\proborigin[\langCode]{N/A}%
+	\probtask[\langCode]{N/A}\probsolution[\langCode]{N/A}\probfig[\langCode]{N/A}%
+	\probwebfig[\langCode]{N/A}{N/A}\probhumanresult[\langCode]{N/A}%
+	\IfFileExists{\fksProb@tmpFilename}{%
+		\input{\fksProb@tmpFilename}%
+		\ClassInfo{fksproblems}{Loaded \fksProb@tmpFilename}%
+		#3
+	}{
+		\ClassWarning{fksproblems}{Problem file \fksProb@tmpFilename not found.}
+	}
+}
+
+% problem heading
+\newcommand\problem{\@startsection{\fksProb@headingLevel}{1}{\z@}%
+	{\fksProb@headingBeforeSkip}%
+	{\fksProb@headingAfterSkip}%
+	{\fksProb@headingStyle}%
+}
+
+% ----------------
+% Content commands
+% ----------------
+%
+% comands specifing content in format commands
+% can be redefined for easy changes
+
+% define dictionary words
+\newcommand\fksProb@dictLabel{Úloha}
+\newcommand\fksProb@dictAverage{průměr}
+\newcommand\fksProb@dictSolved{\plural{\@probsolvers}{řešil}{řešili}{řešilo}}
+\newcommand\fksProb@dictSolvers{\plural{\@probsolvers}{student}{studenti}{studentů}}
+\newcommand\fksProb@dictPoints{\plural{\@probpoints}{bod}{body}{bodů}}
+
+% define content for problem headings
+\newcommand\fksProb@headingBookmarkTask{\problemLetter{problem}: \@probname}
+\newcommand\fksProb@headingBookmarkSolution{\problemLetter{problem}: \@probname}
+\newcommand\fksProb@headingContentTask{\fksProb@dictLabel{} \problemNum{batch}{problem} \,\ldots{} \@probname{} {\Large \problemTagsYears \problemTagsTypes} \hfill {\normalfont\normalsize\problemPoints}}
+\newcommand\fksProb@headingContentSolution{\fksProb@dictLabel{} \problemNum{solvedbatch}{problem} \,\ldots{} \@probname{} \hfill {\normalfont\normalsize\problemPoints; \problemStats}}
+
+% problem heading style
+\newcommand\fksProb@headingLevel{subsection}
+\newcommand\fksProb@headingBeforeSkip{-3.5ex \@plus -1ex \@minus -.2ex}
+\newcommand\fksProb@headingAfterSkip{1.0ex \@plus.2ex}
+\newcommand\fksProb@headingStyle{\normalfont\large\bfseries}
+
+% definitions of problem headings for reusability and redefinitions
+\newcommand\problemHeadingTask{\problem[\fksProb@headingBookmarkTask]{\fksProb@headingContentTask}}
+\newcommand\problemHeadingSolution{\problem[\fksProb@headingBookmarkSolution]{\fksProb@headingContentSolution}}
+
+% year tag characters from pifont
+\newcommand\fksProb@getTagYear[1]{%
+	\ifcase #1 \or%
+		\ding{182}\or \ding{183}\or \ding{184}\or \ding{185}\or \ding{186}\or%
+		\ding{187}\or\ding{188}\or \ding{189}\or \ding{190}\else%
+		\@ctrerr%
+	\fi\,%
+}
+
+% type tags
+\newcommand\fksProb@getTagType[1]{%
+	\ifthenelse{\equal{#1}{hard}}{\ding{72}}{}%
+}
+
+% quotation with author
+\newcommand\signed[1]{
+	{
+		\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+		\hbox{}\nobreak\hfil#1%
+		\parfillskip=0pt \finalhyphendemerits=0 \endgraf
+	}
+}
+
+% formats of task and solution
+\newcommand\fksProb@formatTask{
+	\problemHeadingTask
+	\ifthenelse{\equal{\@probfig}{N/A}}{}{\@probfig}%
+	\@probtask\par%
+}
+
+\newcommand\fksProb@formatSolution{%
+	\problemHeadingSolution
+	\nopagebreak\ifthenelse{\equal{\@probfig}{N/A}}{}{\@probfig}\nopagebreak%
+	\textsl{\@probtask}
+	\signed{\textit{\@proborigin}}
+
+	\medskip
+
+	\noindent \@probsolution\par
+	\nopagebreak\vspace{6pt}\nopagebreak\expandafter\signature\@probsolauthors\par % email on the end solution
+}
+
+% headings
+\@ifundefined{ifyearbook}{\newif\ifyearbook\yearbookfalse}{} % ensure ifyearbook exists
+\newcommand\solutionnote[1]{%
+	\ifyearbook\else%
+		\subsubsection{Poznámky k došlým řešením}#1%
+	\fi
+}
+
+\newcommand\taskhint[2]{
+	\par\noindent\emph{#1}\quad{#2}
+}
+
+% ----------------
+% Utility commands
+% ----------------
+
+% commands for configuring, loading and printing problem tasks and solutions
+% generally used in batches, leaflets and other
+\newcommand\problemtask[1][\fksProb@formatTask]{%
+	\tasktrue\solutionfalse\solutionsinglefalse%
+	\stepcounter{problem}%
+	\fksProb@loadProblem{\thebatch}{\theproblem}{#1}
+}
+
+\newcommand\problemsolution[1][\fksProb@formatSolution]{%
+	\taskfalse\solutiontrue\solutionsinglefalse%
+	\stepcounter{problem}%
+	\fksProb@loadProblem{\thesolvedbatch}{\theproblem}{\fksProb@formatSolution}
+}
+
+\newcommand\problemsolutionsingle{%
+	\taskfalse\solutiontrue\solutionsingletrue%
+	\setcounter{solvedbatch}{\@probbatch}
+	\setcounter{problem}{\@probno}
+	\fksProb@formatSolution
+}
+
+% -------
+% Getters
+% -------
+
+% tags for study years (defaults defined in fksmeta)
+\newcommand\problemTagsYears{%
+	\ifthenelse{\equal{\@probstudyyears}{{N/A}}}{%
+		\expandafter\forcsvlist\expandafter\fksProb@getTagYear\expandafter{\fksMeta@problemDefaultStudyYears}%
+	}{%
+		\expandafter\forcsvlist\expandafter\fksProb@getTagYear\@probstudyyears%
+	}%
+}
+
+% tags for problem types
+\newcommand\problemTagsTypes{%
+	\ifthenelse{\equal{\@probtags}{{N/A}}}{}{%
+		\expandafter\forcsvlist\expandafter\fksProb@getTagType\expandafter{\@probtags}%
+	}
+}
+
+% problem letters
+\newcommand\problemLetter[1]{%
+	\fksMeta@problemLetter{\value{#1}}%
+}
+
+% problem number label
+\newcommand\problemNum[2]{\Roman{#1}.\problemLetter{#2}}
+
+\newcommand\problemStats{%
+	\ifthenelse{\equal\@probavg{N/A}}{%
+		(chybí statistiky)%
+		\PackageWarning{fks problems}{Missing stats for problem \problemNum{solvedbatch}{problem}.}%
+	}{%
+		průměr~\@probavg; %
+		\fksProb@dictSolved~\@probsolvers~\fksProb@dictSolvers%
+	}%
+}
+
+\newcommand\problemPoints{\@probpoints~\fksProb@dictPoints}
+
+% ----------------
+% Problem commands
+% ----------------
+
+% ifs for customizing problems layout
+\newif\iftask
+\newif\ifsolution
+\newif\ifsolutionsingle % solutionsingle implies solution
+
+% problem attributes
+\newcommand\@probbatch{N/A}
+\newcommand\@probno{N/A}
+\newcommand\@probpoints{N/A}
+\newcommand\@probsolauthors{N/A}
+\newcommand\@probauthors{N/A}
+\newcommand\@probsolvers{N/A}
+\newcommand\@probavg{N/A}
+\newcommand\@probtags{N/A}
+\newcommand\@probsource{N/A}
+\newcommand\@proborigintruth{N/A}
+\newcommand\@probtopics{N/A}
+\newcommand\@probexpectedprecision{N/A}
+\newcommand\@probmachineresult{N/A}
+\newcommand\@probstudyyears{N/A}
+
+\newcommand\@probname{N/A}
+\newcommand\@probdbname{N/A}
+\newcommand\@proborigin{N/A}
+\newcommand\@probtask{N/A}
+\newcommand\@probsolution{N/A}
+\newcommand\@probfig{N/A}
+\newcommand\@probwebfig{N/A}
+\newcommand\@probhumanresult{N/A}
+
+% setters for global attributes
+\newcommand\probbatch[1]{\renewcommand\@probbatch{#1}}
+\newcommand\probno[1]{\renewcommand\@probno{#1}}
+\newcommand\probpoints[1]{\renewcommand\@probpoints{#1}}
+\newcommand\probsolauthors[1]{\renewcommand\@probsolauthors{{#1}}} % due to foreach expansion
+\newcommand\probauthors[1]{\renewcommand\@probauthors{{#1}}}
+\newcommand\probsolvers[1]{\renewcommand\@probsolvers{#1}}
+\newcommand\probstudyyears[1]{\renewcommand\@probstudyyears{{#1}}} % due to foreach expansion
+\newcommand\probavg[1]{\renewcommand\@probavg{#1}}
+\newcommand\probtags[1]{\renewcommand\@probtags{{#1}}} % due to foreach expansion
+\newcommand\probsource[1]{\renewcommand\@probsource{#1}}
+\newcommand\proborigintruth[1]{\renewcommand\@proborigintruth{#1}}
+\newcommand\probtopics[1]{\renewcommand\@probtopics{{#1}}} % due to foreach expansion
+\newcommand\probexpectedprecision[1]{\renewcommand\@probexpectedprecision{#1}}
+\newcommand\probmachineresult[1]{\renewcommand\@probmachineresult{\unexpanded{#1}}}
+
+% setters for per language attributes
+\newcommand\probname[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\langCode}}{\renewcommand\@probname{#2}}{}}
+\newcommand\probdbname[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\langCode}}{\renewcommand\@probdbname{#2}}{}}
+\newcommand\proborigin[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\langCode}}{\renewcommand\@proborigin{#2}}{}}
+\newcommand\probfig[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\langCode}}{\renewcommand\@probfig{#2}}{}}
+\newcommand\probwebfig[3][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\langCode}}{\renewcommand\@probwebfig{FIGURE#1CAPTION#2LANG\langCode EFIGURE}}{}}
+\newcommand\probhumanresult[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\langCode}}{\renewcommand\@probhumanresult{#2}}{}}
+\newcommand\probsolution[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\langCode}}{\renewcommand\@probsolution{#2}}{}}
+\newcommand\probtask[2][1]{\ifthenelse{\equal{#1}{1} \OR \equal{#1}{\langCode}}{\renewcommand\@probtask{#2}}{}}
+
+% ----------------
+% Package config
+% ----------------
+
+% Can be used to change commands in the "Content commands" section
+% Automatically load if present
+
+\RequirePackage{fksconf}
+\fksConf@register{fksproblems}
+\fksConf@loadConfig{fksproblems}

@@ -6,42 +6,71 @@
 %
 
 \RequirePackage{polyglossia}
+\RequirePackage{ifthen}
+
+\newif\iffksLangSelected
+\fksLangSelectedfalse
 
 % add new language to FYKOS macros
-\newcommand\newl@ng[2]{%
-  \expandafter\gdef\csname l@ngiso#1\endcsname{#2}%
-  \expandafter\gdef\csname isol@ng#2\endcsname{#1}%
-  \DeclareOption{#1}{\setdefaultlanguage{#1}}
+\newcommand\@langInit[2]{%
+	% define language name and code variables
+	\expandafter\gdef\csname @langName#2\endcsname{#1}%
+	\expandafter\gdef\csname @langCode#1\endcsname{#2}%
+
+	% create option for selecting that language
+	\DeclareOption{#1}{ % full name as argument
+		\setdefaultlanguage{#1}\fksLangSelectedtrue
+	}
+	\DeclareOption{#2}{ % iso code as argument
+		\setdefaultlanguage{#1}\fksLangSelectedtrue
+	}
 }%
 
-% returns iso code for actual lang name
-\newcommand\isolang[0]{%
-  \expandafter\ifx\csname l@ngiso\languagename\endcsname\relax
-  \PackageWarning{fkslang}{Undefined language \languagename}%
-  null%
-  \else
-  \expandafter\csname l@ngiso\languagename\endcsname\fi
+% returns iso code for currently selected language
+\newcommand\langCode{%
+	\expandafter\ifx\csname @langCode\languagename\endcsname\relax
+		\PackageWarning{fkslang}{Undefined language \languagename}%
+		null%
+	\else
+		\expandafter\csname @langCode\languagename\endcsname
+	\fi
 }
 
 % returns ilang name for iso code
-\newcommand\langiso[1]{%
-  \expandafter\ifx\csname isol@ng#1\endcsname\relax
-  \PackageWarning{fkslang}{Undefined language #1}%
-  null%
-  \else
-  \expandafter\csname isol@ng#1\endcsname\fi
+% when no argument given return current language name
+\newcommand\langName[1][]{%
+	\ifthenelse{\equal{#1}{}}{%
+		\languagename{}%
+	}{
+		\expandafter\ifx\csname @langName#1\endcsname\relax
+			\PackageWarning{fkslang}{Undefined language code #1}%
+			null%
+		\else%
+			\expandafter\csname @langName#1\endcsname%
+		\fi
+	}%
 }
 
-% language optional
+% language optional -- if language selected
 \newcommand\lngopt[2]{%
-    \ifthenelse{\equal{#1}{\isolang}}{#2}{}%
+	\ifthenelse{\equal{#1}{\langCode}}{#2}{}%
+}
+
+% useful macro for selecting correct plural form in czech
+\newcommand\plural[4]{%
+	\ifcase#1%
+		#4\or#2\or#3\or#3\or#3\else#4
+	\fi
 }
 
 % language without options
+\iffksLangSelected\else
+	\PackageWarning{fksLang}{No language passed, Czech selected.}
+\fi
 \setdefaultlanguage{czech}
-% supproted languages
-\newl@ng{czech}{cs}
-\newl@ng{slovak}{sk}
-\newl@ng{english}{en}
-\ProcessOptions\relax
 
+% supproted languages
+\@langInit{czech}{cs}
+\@langInit{slovak}{sk}
+\@langInit{english}{en}
+\ProcessOptions\relax
