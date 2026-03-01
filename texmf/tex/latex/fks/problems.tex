@@ -91,9 +91,9 @@
 % problem info fields macros
 \newcommand\problemnum[2]{\Roman{#1}.\metaprobletter{#2}}
 
-\newcommand\problemstats{\problempoints;
-\ifthenelse{\equal\@probavg{N/A}}{(chybí statistiky)\PackageWarning{fks problems}{Missing stats for problem \Roman{solvedbatch}.\theproblem.}}{%
-průměr~\@probavg;
+\newcommand\problemstats{\problempoints
+\ifthenelse{\equal\@probavg{N/A}}{\PackageWarning{fks problems}{Missing stats for problem \Roman{solvedbatch}.\theproblem.}}{%
+; průměr~\@probavg;
 \plural{\@probsolvers}{řešil}{řešili}{řešilo}{}~\@probsolvers{}~\plural{\@probsolvers}{student}{studenti}{studentů}}}
 
 \newcommand\problempoints{\@probpoints~%

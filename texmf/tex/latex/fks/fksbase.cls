@@ -24,6 +24,12 @@
 
 \RequirePackage[version=3]{mhchem}
 \RequirePackage{listings}
+\RequirePackage{tasks}
+\settasks{
+	before-skip=0.5\topsep,
+	after-skip=0.5\topsep,
+	column-sep=2mm
+}
 
 \RequirePackage[hyphens]{url}
 \RequirePackage[xetex,
