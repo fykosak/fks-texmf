@@ -44,12 +44,15 @@
 \RequirePackage{xkeyval}
 \RequirePackage{fkslang}
 
-\newfontfamily\cyrillicfont[Ligatures=TeX, % recommended
-ItalicFont=[cmunti.otf],
-BoldFont=[cmunbx.otf],
-BoldItalicFont=[cmunbi.otf],
-SlantedFont=[cmunsl.otf]
-]{[cmunrm.otf]}
+\newfontfamily\cyrillicfont{CMU Serif}[
+    Ligatures=TeX,
+    Extension = .otf,
+    UprightFont = cmunrm,
+    ItalicFont = cmunti,
+    BoldFont = cmunbx,
+    BoldItalicFont = cmunbi,
+    SlantedFont = cmunsl
+]
 
 \widowpenalty 1000 \clubpenalty 1000 \displaywidowpenalty 1000
 
